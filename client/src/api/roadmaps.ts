@@ -28,6 +28,8 @@ export const progressApi = {
 export const aiApi = {
   chat: (message: string, context?: any, history?: any[]) =>
     apiClient.post('/ai/chat', { message, context, history }, { timeout: 60000 }),
+  generateQuiz: (topic: string, level: string) =>
+    apiClient.post('/ai/quiz', { topic, level }, { timeout: 90000 }),
 };
 
 export const profileApi = {

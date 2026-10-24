@@ -23,6 +23,66 @@ export function isConfigured(): boolean {
   return Boolean(process.env.GEMINI_API_KEY?.trim());
 }
 
+export type PracticeQuestion = {
+  question: string;
+  options: string[];
+  correct: number;
+  explanation: string;
+};
+
+/** Generate a validated, exactly ten-question multiple choice practice quiz. */
+export async function generatePracticeQuiz(topic: string, level: string): Promise<PracticeQuestion[]> {
+  const client = getClient();
+  if (!client) throw new Error('AI_NOT_CONFIGURED');
+
+  const prompt = `Create exactly 10 original multiple-choice learning quiz questions.
+Topic: ${topic}
+Learner level: ${level}
+Return ONLY JSON in this shape: {"questions":[{"question":"...","options":["...","...","...","..."],"correct":0,"explanation":"..."}]}
+Every question must have exactly four distinct plausible options. correct must be the zero-based index of the single correct option. Explanations should briefly teach why it is correct. Keep questions relevant, clear, and appropriate to the stated level.`;
+  const preferredModel = getModel();
+  const models = [...new Set([preferredModel, DEFAULT_MODEL, 'gemini-3.6-flash'])];
+  let lastError: unknown;
+
+  for (let index = 0; index < models.length; index++) {
+    try {
+      const response = await client.models.generateContent({
+        model: models[index],
+        contents: prompt,
+        config: { responseMimeType: 'application/json', maxOutputTokens: 4_000 },
+      });
+      const raw = response.text?.trim();
+      if (!raw) throw new Error('AI returned an empty quiz. Please try again.');
+      const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
+      const parsed = JSON.parse(cleaned);
+      const questions = Array.isArray(parsed) ? parsed : parsed?.questions;
+      if (!Array.isArray(questions) || questions.length !== 10) {
+        throw new Error('AI did not return exactly 10 questions. Please generate the quiz again.');
+      }
+      return questions.map((item: any, questionIndex: number) => {
+        if (!item || typeof item.question !== 'string' || !item.question.trim() ||
+            !Array.isArray(item.options) || item.options.length !== 4 ||
+            item.options.some((option: unknown) => typeof option !== 'string' || !option.trim()) ||
+            new Set(item.options.map((option: string) => option.trim().toLowerCase())).size !== 4 ||
+            !Number.isInteger(item.correct) || item.correct < 0 || item.correct > 3 ||
+            typeof item.explanation !== 'string' || !item.explanation.trim()) {
+          throw new Error(`AI returned an invalid question ${questionIndex + 1}. Please generate the quiz again.`);
+        }
+        return { question: item.question.trim(), options: item.options.map((option: string) => option.trim()), correct: item.correct, explanation: item.explanation.trim() };
+      });
+    } catch (error) {
+      const providerError = error as { status?: number; code?: number | string; message?: string };
+      const details = providerError.message || '';
+      const unavailable = providerError.status === 404 || providerError.code === 404 ||
+        /model.{0,40}(not found|not available|unsupported|does not exist)|unsupported.{0,30}model/i.test(details);
+      if (unavailable && index < models.length - 1) continue;
+      lastError = error;
+      break;
+    }
+  }
+  throw lastError || new Error('AI could not generate the quiz. Please try again.');
+}
+
 async function generateText(
   prompt: string,
   config?: { systemInstruction?: string; responseMimeType?: string; maxOutputTokens?: number }

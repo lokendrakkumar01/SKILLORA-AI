@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { ArrowUp, Brain, ChevronDown, LoaderCircle, MessageCircle, Sparkles, Trash2, X } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { ArrowUp, Brain, ChevronDown, LoaderCircle, MessageCircle, Sparkles, Trash2, X, ClipboardCheck } from 'lucide-react';
 import { aiApi } from '../../api/roadmaps';
 
 type ChatMessage = { role: 'user' | 'assistant'; content: string; error?: boolean; retryContent?: string };
@@ -17,6 +17,7 @@ function readMessages(): ChatMessage[] {
 
 export function GlobalAiAssistant() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>(readMessages);
   const [input, setInput] = useState('');
@@ -83,7 +84,7 @@ export function GlobalAiAssistant() {
           <div className="flex items-center gap-1"><button type="button" title="Start a new chat" aria-label="Start a new chat" disabled={!messages.length || busy} onClick={() => setMessages([])} className="rounded-lg p-2 text-slate-400 hover:bg-white/5 hover:text-white disabled:opacity-40"><Trash2 className="h-4 w-4" /></button><button type="button" title="Close assistant" aria-label="Close assistant" onClick={() => setOpen(false)} className="rounded-lg p-2 text-slate-400 hover:bg-white/5 hover:text-white"><X className="h-4 w-4" /></button></div>
         </header>
         <div className="global-ai-messages flex-1 space-y-4 overflow-y-auto px-4 py-4" aria-live="polite">
-          {!messages.length && <div className="flex min-h-full flex-col justify-center"><div className="mb-4 grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-violet-500/20 to-cyan-400/10 text-violet-300"><MessageCircle className="h-5 w-5" /></div><h3 className="text-lg font-bold text-white">What are you learning today?</h3><p className="mt-1 mb-5 text-sm leading-6 text-slate-400">Ask for an explanation, study plan, or a little guidance to keep moving.</p><div className="space-y-2">{STARTERS.map((starter) => <button key={starter} type="button" onClick={() => setInput(starter)} className="block w-full rounded-xl border border-white/8 bg-white/[.025] px-3 py-2.5 text-left text-xs text-slate-300 transition hover:border-violet-400/30 hover:bg-violet-500/5">{starter}<span className="float-right text-violet-300">↗</span></button>)}</div></div>}
+          {!messages.length && <div className="flex min-h-full flex-col justify-center"><div className="mb-4 grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-violet-500/20 to-cyan-400/10 text-violet-300"><MessageCircle className="h-5 w-5" /></div><h3 className="text-lg font-bold text-white">What are you learning today?</h3><p className="mt-1 mb-5 text-sm leading-6 text-slate-400">Ask for an explanation, study plan, or a little guidance to keep moving.</p><div className="space-y-2">{STARTERS.map((starter) => <button key={starter} type="button" onClick={() => setInput(starter)} className="block w-full rounded-xl border border-white/8 bg-white/[.025] px-3 py-2.5 text-left text-xs text-slate-300 transition hover:border-violet-400/30 hover:bg-violet-500/5">{starter}<span className="float-right text-violet-300">↗</span></button>)}</div><button type="button" onClick={() => { setOpen(false); navigate('/quizzes'); }} className="mt-3 flex w-full items-center justify-between rounded-xl border border-violet-400/20 bg-violet-500/[.07] px-3 py-3 text-left text-xs font-semibold text-violet-200 transition hover:border-violet-400/40 hover:bg-violet-500/10"><span className="flex items-center gap-2"><ClipboardCheck className="h-4 w-4" />Build a 10-question AI quiz</span><span>↗</span></button></div>}
           {messages.map((message, index) => <div key={`${index}-${message.role}`} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}><div className={`max-w-[88%] rounded-2xl px-3.5 py-2.5 text-sm leading-6 ${message.role === 'user' ? 'rounded-br-md bg-violet-600 text-white' : message.error ? 'rounded-bl-md border border-rose-400/20 bg-rose-400/5 text-rose-200' : 'rounded-bl-md border border-white/8 bg-white/[.04] text-slate-200'}`}><div className="whitespace-pre-wrap break-words">{message.content}</div>{message.error && message.retryContent && <button type="button" disabled={busy} onClick={() => void send(message.retryContent, index)} className="mt-2 text-xs font-semibold text-violet-300 underline underline-offset-2 disabled:opacity-50">Try again</button>}</div></div>)}
           {busy && <div className="flex items-center gap-2 text-xs text-slate-400"><LoaderCircle className="h-4 w-4 animate-spin text-violet-300" />Thinking through it…</div>}
           <div ref={bottomRef} />

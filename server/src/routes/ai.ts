@@ -62,6 +62,42 @@ router.post('/chat', auth, aiLimiter, async (req: AuthRequest, res: Response) =>
   }
 });
 
+// POST /api/ai/quiz — personal practice only; generated answers never award XP.
+router.post('/quiz', auth, aiLimiter, async (req: AuthRequest, res: Response) => {
+  try {
+    const { topic, level = 'beginner' } = req.body ?? {};
+    if (typeof topic !== 'string' || !topic.trim()) {
+      return res.status(400).json({ error: 'Enter a topic for your quiz.' });
+    }
+    if (topic.trim().length > 200) {
+      return res.status(400).json({ error: 'Keep the quiz topic under 200 characters.' });
+    }
+    if (!['beginner', 'intermediate', 'advanced'].includes(level)) {
+      return res.status(400).json({ error: 'Choose beginner, intermediate, or advanced difficulty.' });
+    }
+    if (!aiService.isConfigured()) {
+      return res.status(503).json({ error: 'AI quizzes are not configured. Add GEMINI_API_KEY to the server environment.' });
+    }
+    const questions = await aiService.generatePracticeQuiz(topic.trim(), level);
+    res.json({ questions, count: 10, isAI: true, practiceOnly: true });
+  } catch (err) {
+    const providerError = err as { status?: number; code?: number | string; message?: string };
+    const details = providerError.message || '';
+    const statusCode = Number(providerError.status || providerError.code);
+    console.error('AI quiz route error:', statusCode || 'unknown status', details.slice(0, 500));
+    if (statusCode === 429 || /resource_exhausted|quota/i.test(details)) {
+      return res.status(503).json({ error: 'The AI service has reached its current usage limit. Please try again later.' });
+    }
+    if (statusCode === 401 || statusCode === 403 || /api key|permission denied/i.test(details)) {
+      return res.status(503).json({ error: 'The AI service credentials are not authorized. Please contact the site administrator.' });
+    }
+    if (/model.{0,40}(not found|not available|unsupported|does not exist)/i.test(details)) {
+      return res.status(503).json({ error: 'No available AI model is configured. Please check the server GEMINI_MODEL setting.' });
+    }
+    res.status(502).json({ error: details.startsWith('AI ') ? details : 'The AI service could not build this quiz. Please retry in a moment.' });
+  }
+});
+
 // POST /api/ai/explain
 router.post('/explain', auth, async (req: AuthRequest, res: Response) => {
   try {
