@@ -13,12 +13,53 @@ html {
 }
 
 body {
-  background-color: #07070b;
+  background-color: #08090e;
   color: #f1f5f9;
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+}
+
+button, a, input, textarea { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+::selection { background: rgba(139, 92, 246, .34); color: #fff; }
+
+.app-shell {
+  background:
+    radial-gradient(ellipse at 72% -18%, rgba(93, 55, 180, .15), transparent 38%),
+    #08090e;
+}
+.app-shell__content { position: relative; }
+.app-topbar {
+  flex-shrink: 0;
+  background: rgba(8, 9, 14, .76);
+  border-color: rgba(148, 163, 184, .11);
+}
+.app-main { scrollbar-gutter: stable; }
+.app-main__inner { min-height: 100%; }
+.app-mobile-nav { display: none; }
+
+/* Consistent, softly lit surfaces across all signed-in screens. */
+.app-shell main [class*="rounded-2xl"][class*="border"] {
+  transition: border-color .22s ease, background-color .22s ease, box-shadow .22s ease;
+}
+.app-shell main [class*="rounded-2xl"][class*="border-white"]:hover {
+  border-color: rgba(167, 139, 250, .22);
+}
+.app-shell main [class*="rounded-2xl"][class*="bg-[#0F0F1A]"],
+.app-shell main [class*="rounded-2xl"][class*="bg-[#0D0D18]"],
+.app-shell main [class*="rounded-2xl"][class*="bg-[#111118]"] {
+  box-shadow: 0 12px 35px rgba(0, 0, 0, .12), inset 0 1px rgba(255, 255, 255, .018);
+}
+.app-shell main h1 { letter-spacing: -.035em; }
+.app-shell main button:focus-visible,
+.app-shell main a:focus-visible,
+.app-topbar button:focus-visible,
+.app-mobile-nav button:focus-visible,
+.app-mobile-nav a:focus-visible {
+  outline: 2px solid rgba(167, 139, 250, .9);
+  outline-offset: 3px;
 }
 
 /* Custom Scrollbar */
@@ -129,4 +170,54 @@ code, pre {
 
 .animate-pulse-slow {
   animation: pulseSlow 6s ease-in-out infinite;
+}
+
+@media (max-width: 1023px) {
+  .app-mobile-nav {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    flex-shrink: 0;
+    padding: 8px max(10px, env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom));
+    background: rgba(12, 13, 20, .94);
+    border-top: 1px solid rgba(148, 163, 184, .13);
+    backdrop-filter: blur(20px);
+    z-index: 30;
+  }
+  .app-mobile-nav__link {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    border: 0;
+    background: transparent;
+    color: #8290a8;
+    font: inherit;
+    font-size: 10px;
+    font-weight: 650;
+    padding: 5px 2px;
+    transition: color .2s ease, transform .2s ease;
+  }
+  .app-mobile-nav__link:hover { color: #ddd6fe; }
+  .app-mobile-nav__link.is-active { color: #c4b5fd; }
+  .app-mobile-nav__link.is-active svg { filter: drop-shadow(0 0 7px rgba(167, 139, 250, .55)); }
+  .app-main { padding-bottom: 18px; }
+}
+
+@media (max-width: 640px) {
+  .app-topbar { height: 58px; padding-left: 16px; padding-right: 16px; }
+  .app-main { padding: 18px 14px 14px; }
+  .app-shell main [class*="p-8"] { padding: 1.25rem; }
+  .app-shell main [class*="p-6"] { padding: 1.1rem; }
+  .app-shell main [class*="p-5"] { padding: 1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
 }

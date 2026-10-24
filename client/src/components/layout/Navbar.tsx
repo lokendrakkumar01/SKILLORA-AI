@@ -225,21 +225,46 @@ export function AppSidebar() {
   );
 }
 
+export function AppMobileNav() {
+  const location = useLocation();
+  const { logout } = useAuth();
+
+  return (
+    <nav className="app-mobile-nav" aria-label="Main navigation">
+      {APP_NAV.map(({ href, label, icon: Icon }) => {
+        const active = location.pathname === href || (href !== '/dashboard' && location.pathname.startsWith(href));
+        return (
+          <Link key={href} to={href} aria-current={active ? 'page' : undefined}
+            className={`app-mobile-nav__link${active ? ' is-active' : ''}`}>
+            <Icon className="w-5 h-5" />
+            <span>{label === 'Achievements' ? 'Awards' : label === 'My Roadmaps' ? 'Paths' : label}</span>
+          </Link>
+        );
+      })}
+      <button type="button" className="app-mobile-nav__link" onClick={logout} aria-label="Sign out">
+        <LogOut className="w-5 h-5" />
+        <span>Sign out</span>
+      </button>
+    </nav>
+  );
+}
+
 export function AppTopbar({ title }: { title?: string }) {
   const { user } = useAuth();
   const navigate = useNavigate();
 
   return (
-    <header className="h-16 border-b border-white/[0.08] flex items-center justify-between px-6 bg-[#07070b]/60 backdrop-blur-xl">
+    <header className="app-topbar h-16 border-b border-white/[0.08] flex items-center justify-between px-6 backdrop-blur-xl">
       <div className="flex items-center gap-3">
         <div className="lg:hidden">
           <Link to="/dashboard" className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-violet-600 to-blue-600 flex items-center justify-center font-bold text-white text-xs">
               S
             </div>
+            <span className="text-xs font-extrabold tracking-wide text-white">SKILLORA <span className="text-violet-300">AI</span></span>
           </Link>
         </div>
-        {title && <h1 className="text-sm font-bold text-slate-200 tracking-tight">{title}</h1>}
+        {title && <h1 className="hidden sm:block text-sm font-bold text-slate-200 tracking-tight">{title}</h1>}
       </div>
 
       {user && (

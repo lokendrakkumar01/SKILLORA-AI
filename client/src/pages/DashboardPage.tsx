@@ -55,7 +55,7 @@ export default function DashboardPage() {
         {/* Welcome */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="text-2xl font-black text-white">
-            Welcome back, <span className="text-gradient">{user?.name?.split(' ')[0]}</span>! 👋
+            Welcome back, <span className="gradient-text">{user?.name?.split(' ')[0]}</span>! 👋
           </h1>
           <p className="text-slate-400 text-sm mt-1">
             {overview?.streak > 0 ? `🔥 You're on a ${overview.streak}-day streak! Keep it going.` : "Let's start learning today!"}
