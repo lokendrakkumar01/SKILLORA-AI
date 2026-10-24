@@ -7,14 +7,8 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
-const STATS = [
-  { value: '50k+', label: 'Active Learners' },
-  { value: '200+', label: 'Learning Paths' },
-  { value: '98%', label: 'Goal Success Rate' },
-];
-
 const FEATURES_LIST = [
-  { icon: Zap, text: 'Personalized AI roadmap in under 30 seconds' },
+  { icon: Zap, text: 'Personalized AI-generated learning roadmaps' },
   { icon: Brain, text: 'Contextual AI tutor inside every lesson' },
   { icon: Trophy, text: 'XP system, streaks & achievement badges' },
   { icon: TrendingUp, text: 'Adaptive quizzes that grow with you' },
@@ -57,7 +51,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#07070b] flex overflow-hidden">
+    <div className="min-h-screen bg-[#07070b] flex overflow-x-hidden">
 
       {/* ── LEFT PANEL (decorative, desktop only) ─────────────────── */}
       <div className="hidden lg:flex lg:w-[52%] xl:w-[55%] relative flex-col justify-between p-12 overflow-hidden">
@@ -145,42 +139,14 @@ export default function LoginPage() {
               })}
             </div>
 
-            {/* Stats bar */}
-            <div className="grid grid-cols-3 gap-4">
-              {STATS.map((s, i) => (
-                <motion.div
-                  key={s.label}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.55 + i * 0.07 }}
-                  className="p-4 rounded-2xl bg-white/[0.04] border border-white/[0.06] text-center"
-                >
-                  <p className="text-xl font-extrabold text-white">{s.value}</p>
-                  <p className="text-[10px] text-slate-500 mt-0.5 font-medium">{s.label}</p>
-                </motion.div>
+            <div className="flex flex-wrap gap-x-6 gap-y-3 border-t border-white/[0.08] pt-5 text-xs text-slate-400">
+              {['Plan your next skill', 'Learn at your pace', 'Track your progress'].map((item) => (
+                <span key={item} className="inline-flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-violet-400" />{item}</span>
               ))}
             </div>
           </motion.div>
         </div>
 
-        {/* Bottom badge */}
-        <div className="relative z-10">
-          <div className="inline-flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-white/[0.04] border border-white/[0.07]">
-            <div className="flex -space-x-2">
-              {['RK', 'AS', 'PM', 'LJ'].map((initials) => (
-                <div
-                  key={initials}
-                  className="w-7 h-7 rounded-full bg-gradient-to-tr from-violet-500 to-indigo-500 border-2 border-[#0d0d18] flex items-center justify-center text-[10px] font-bold text-white"
-                >
-                  {initials}
-                </div>
-              ))}
-            </div>
-            <p className="text-xs text-slate-300 font-medium">
-              <span className="text-white font-bold">50,000+ learners</span> growing with Skillora
-            </p>
-          </div>
-        </div>
       </div>
 
       {/* ── RIGHT PANEL (form) ─────────────────────────────────────── */}
@@ -204,7 +170,7 @@ export default function LoginPage() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10 w-full max-w-md"
+          className="relative z-10 w-full max-w-lg rounded-3xl border border-white/[0.08] bg-[#11141c]/85 p-6 shadow-xl shadow-black/20 sm:p-8"
         >
           {/* Mobile logo */}
           <div className="lg:hidden text-center mb-8">
@@ -262,13 +228,10 @@ export default function LoginPage() {
 
             {/* Password */}
             <div>
-              <div className="flex items-center justify-between mb-2">
+              <div className="mb-2">
                 <label className="text-xs font-bold text-slate-300 tracking-wide uppercase">
                   Password
                 </label>
-                <a href="#" className="text-xs text-violet-400 hover:text-violet-300 transition-colors">
-                  Forgot password?
-                </a>
               </div>
               <div className="relative group">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-violet-400 transition-colors" />

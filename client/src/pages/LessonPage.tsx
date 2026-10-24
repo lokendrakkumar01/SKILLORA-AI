@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   ArrowLeft, ArrowRight, CheckCircle2, BookOpen, Clock, Zap, Send,
-  Brain, MessageCircle, Bookmark, ChevronRight, HelpCircle, X
+  Brain, MessageCircle, ChevronRight, HelpCircle, X
 } from 'lucide-react';
 import { lessonsApi, aiApi } from '../api/roadmaps';
 import { ProtectedLayout } from '../components/layout/AppLayout';
@@ -12,7 +12,7 @@ import { Badge } from '../components/ui/Badge';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
 
-interface ChatMsg { role: 'user' | 'assistant'; content: string }
+interface ChatMsg { role: 'user' | 'assistant'; content: string; error?: boolean; retryContent?: string }
 interface RoadmapContext { goal?: string; level?: string }
 
 export default function LessonPage() {
@@ -27,6 +27,7 @@ export default function LessonPage() {
   const [chatInput, setChatInput] = useState('');
   const [chatLoading, setChatLoading] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const mobileChatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!roadmapId || !stepId) return;
@@ -41,6 +42,7 @@ export default function LessonPage() {
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    mobileChatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatHistory]);
 
   const handleComplete = async () => {
@@ -60,11 +62,16 @@ export default function LessonPage() {
     }
   };
 
-  const sendChat = async () => {
-    if (!chatInput.trim() || chatLoading) return;
-    const msg = chatInput.trim();
+  const sendChat = async (retryMessage?: string, retryAtIndex?: number) => {
+    const msg = (retryMessage ?? chatInput).trim();
+    if (!msg || chatLoading || !step) return;
+    const history = chatHistory.filter((item, index) => {
+      if (item.error || chatHistory[index + 1]?.error) return false;
+      if (typeof retryAtIndex === 'number' && (index === retryAtIndex || index === retryAtIndex - 1)) return false;
+      return true;
+    });
     setChatInput('');
-    const newHistory: ChatMsg[] = [...chatHistory, { role: 'user', content: msg }];
+    const newHistory: ChatMsg[] = [...history, { role: 'user', content: msg }];
     setChatHistory(newHistory);
     setChatLoading(true);
     try {
@@ -74,11 +81,15 @@ export default function LessonPage() {
         content: step?.content,
         examples: step?.examples,
         exercises: step?.exercises,
-      }, chatHistory);
+      }, history);
+      if (typeof res.data.response !== 'string' || !res.data.response.trim()) {
+        throw new Error('The AI tutor returned an empty reply. Please try again.');
+      }
       setChatHistory([...newHistory, { role: 'assistant', content: res.data.response }]);
     } catch (error: any) {
       const message = error.response?.data?.error || 'The AI tutor could not reply. Check your connection and try again.';
-      setChatHistory([...newHistory, { role: 'assistant', content: message }]);
+      setChatInput(msg);
+      setChatHistory([...newHistory, { role: 'assistant', content: message, error: true, retryContent: msg }]);
     } finally {
       setChatLoading(false);
     }
@@ -221,9 +232,17 @@ export default function LessonPage() {
                   <div className={`rounded-2xl px-3.5 py-2.5 max-w-[85%] text-xs leading-relaxed ${
                     msg.role === 'user'
                       ? 'bg-violet-500/20 border border-violet-500/30 text-slate-200 rounded-tr-sm'
-                      : 'bg-[#1A1A2E] border border-white/[0.06] text-slate-300 rounded-tl-sm'
+                      : msg.error
+                        ? 'bg-rose-500/[0.08] border border-rose-400/20 text-rose-200 rounded-tl-sm'
+                        : 'bg-[#1A1A2E] border border-white/[0.06] text-slate-300 rounded-tl-sm'
                   }`}>
                     {msg.content}
+                    {msg.error && (
+                      <button type="button" onClick={() => sendChat(msg.retryContent, chatHistory.indexOf(msg))}
+                        className="mt-2 flex items-center gap-1.5 font-semibold text-rose-200 underline underline-offset-2 hover:text-white">
+                        <ArrowRight className="h-3 w-3" /> Try again
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
@@ -240,11 +259,12 @@ export default function LessonPage() {
             <div className="p-3 border-t border-white/[0.06]">
               <div className="flex gap-2">
                 <input value={chatInput} onChange={(e) => setChatInput(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && !chatLoading && sendChat()}
+                  maxLength={4000}
+                  onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), sendChat())}
                   placeholder="Ask about this lesson..."
                   className="flex-1 px-3 py-2 rounded-xl bg-[#111118] border border-white/[0.08] text-slate-200 text-xs outline-none focus:border-violet-500" />
-                <button onClick={sendChat} disabled={chatLoading || !chatInput.trim()}
-                  className="w-8 h-8 rounded-xl bg-violet-600 flex items-center justify-center text-white hover:bg-violet-500 disabled:opacity-40 transition-all">
+                <button aria-label="Send question to AI tutor" onClick={() => sendChat()} disabled={chatLoading || !chatInput.trim()}
+                  className="w-9 h-9 shrink-0 rounded-xl bg-violet-600 flex items-center justify-center text-white hover:bg-violet-500 disabled:opacity-40 transition-all">
                   <Send className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -254,32 +274,51 @@ export default function LessonPage() {
 
         {/* Mobile Tutor FAB */}
         <button onClick={() => setTutorOpen(!tutorOpen)}
-          className="xl:hidden fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-br from-violet-600 to-blue-600 flex items-center justify-center text-white shadow-xl shadow-violet-500/30 z-40 hover:scale-105 transition-transform">
+          className="xl:hidden fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-5 w-14 h-14 rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-violet-950/30 z-40 hover:scale-105 transition-transform">
           {tutorOpen ? <X className="w-5 h-5" /> : <MessageCircle className="w-5 h-5" />}
         </button>
 
         {/* Mobile Tutor Sheet */}
         {tutorOpen && (
-          <div className="xl:hidden fixed inset-x-0 bottom-0 z-30 bg-[#0D0D18] border-t border-white/[0.06] rounded-t-3xl p-4 shadow-2xl" style={{ maxHeight: '60vh' }}>
-            <div className="overflow-y-auto space-y-3 mb-3" style={{ maxHeight: 'calc(60vh - 80px)' }}>
+          <div className="xl:hidden fixed inset-x-0 bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-30 bg-[#0D0D18] border border-white/[0.08] rounded-t-3xl p-4 shadow-2xl" style={{ maxHeight: '60vh' }}>
+            <div className="overflow-y-auto space-y-3 mb-3" style={{ maxHeight: 'calc(60vh - 92px)' }}>
               {chatHistory.length === 0 && (
-                <p className="text-xs text-slate-400 px-1 py-2">Ask about this lesson. The tutor can use the lesson text, examples, and exercises to tailor its answer.</p>
+                <div className="px-1 py-2">
+                  <p className="text-xs leading-relaxed text-slate-400">Ask about this lesson. The tutor can use the lesson text, examples, and exercises to tailor its answer.</p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {['Explain this simply', 'Give me an example', 'Practice question'].map((question) => (
+                      <button key={question} type="button" onClick={() => setChatInput(question)}
+                        className="rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-xs text-slate-300 hover:border-violet-400/30 hover:text-violet-200">
+                        {question}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               )}
               {chatHistory.map((msg, i) => (
                 <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'gap-2'}`}>
                   {msg.role === 'assistant' && <Brain className="w-5 h-5 text-violet-400 shrink-0 mt-1" />}
-                  <div className={`rounded-2xl px-3 py-2 max-w-[80%] text-xs ${msg.role === 'user' ? 'bg-violet-500/20 text-slate-200' : 'bg-[#1A1A2E] text-slate-300'}`}>
+                  <div className={`rounded-2xl px-3 py-2 max-w-[85%] text-xs leading-relaxed ${msg.role === 'user' ? 'bg-violet-500/20 text-slate-200' : msg.error ? 'bg-rose-500/[0.08] border border-rose-400/20 text-rose-200' : 'bg-[#1A1A2E] text-slate-300'}`}>
                     {msg.content}
+                    {msg.error && (
+                      <button type="button" onClick={() => sendChat(msg.retryContent, chatHistory.indexOf(msg))}
+                        className="mt-2 flex items-center gap-1.5 font-semibold text-rose-200 underline underline-offset-2 hover:text-white">
+                        <ArrowRight className="h-3 w-3" /> Try again
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
+              {chatLoading && <div className="shimmer h-8 w-36 rounded-2xl" aria-label="AI tutor is thinking" />}
+              <div ref={mobileChatEndRef} />
             </div>
             <div className="flex gap-2">
               <input value={chatInput} onChange={(e) => setChatInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && !chatLoading && sendChat()}
+                maxLength={4000}
+                onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), sendChat())}
                 placeholder="Ask the AI tutor..."
                 className="flex-1 px-3 py-2.5 rounded-xl bg-[#111118] border border-white/[0.08] text-slate-200 text-sm outline-none focus:border-violet-500" />
-              <button onClick={sendChat} disabled={chatLoading || !chatInput.trim()}
+              <button aria-label="Send question to AI tutor" onClick={() => sendChat()} disabled={chatLoading || !chatInput.trim()}
                 className="w-10 h-10 rounded-xl bg-violet-600 flex items-center justify-center text-white disabled:opacity-40">
                 <Send className="w-4 h-4" />
               </button>

@@ -55,7 +55,7 @@ export default function ProfilePage() {
             <div className="w-24 h-24 rounded-full bg-gradient-to-br from-violet-500 to-blue-500 flex items-center justify-center shadow-xl shadow-violet-500/20">
               <span className="text-white font-black text-3xl">{user.name[0]?.toUpperCase()}</span>
             </div>
-            <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-[#111118] border border-white/10 flex items-center justify-center cursor-pointer hover:border-violet-500/40 transition-colors">
+            <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-[#111118] border border-white/10 flex items-center justify-center">
               <Camera className="w-3.5 h-3.5 text-slate-400" />
             </div>
           </div>

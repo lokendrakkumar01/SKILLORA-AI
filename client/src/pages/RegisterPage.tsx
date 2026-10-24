@@ -8,7 +8,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 
 const PERKS = [
-  { icon: Zap, title: 'AI Roadmap in 30 Seconds', desc: 'Turn any goal into a structured curriculum instantly.' },
+  { icon: Zap, title: 'Personalized Roadmaps', desc: 'Turn your learning goal into a structured curriculum.' },
   { icon: Brain, title: 'Contextual AI Tutor', desc: 'Ask questions and get answers tailored to your lesson.' },
   { icon: Trophy, title: 'Gamified Progress', desc: 'Earn XP, maintain streaks, unlock achievements.' },
   { icon: TrendingUp, title: 'Adaptive Quizzes', desc: 'Checkpoints that grow harder as you improve.' },
@@ -47,7 +47,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#07070b] flex overflow-hidden">
+    <div className="min-h-screen bg-[#07070b] flex overflow-x-hidden">
 
       {/* ── LEFT PANEL (decorative, desktop only) ─────────────────── */}
       <div className="hidden lg:flex lg:w-[52%] xl:w-[55%] relative flex-col justify-between p-12 overflow-hidden">
@@ -137,30 +137,6 @@ export default function RegisterPage() {
           </motion.div>
         </div>
 
-        {/* Bottom testimonial */}
-        <div className="relative z-10">
-          <div className="p-5 rounded-2xl bg-white/[0.04] border border-white/[0.07]">
-            <div className="flex items-center gap-1 mb-2">
-              {[...Array(5)].map((_, i) => (
-                <svg key={i} className="w-3.5 h-3.5 text-amber-400 fill-amber-400" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              ))}
-            </div>
-            <p className="text-xs text-slate-300 leading-relaxed mb-3 italic">
-              "Skillora gave me a 90-day full-stack roadmap in seconds. I've already completed Phase 1 and landed my first freelance project!"
-            </p>
-            <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-violet-500 to-indigo-500 flex items-center justify-center text-white text-[10px] font-bold">
-                RK
-              </div>
-              <div>
-                <p className="text-[11px] font-bold text-white">Rahul Kumar</p>
-                <p className="text-[10px] text-slate-500">Full Stack Developer</p>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* ── RIGHT PANEL (form) ─────────────────────────────────────── */}
@@ -184,7 +160,7 @@ export default function RegisterPage() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10 w-full max-w-md"
+          className="relative z-10 w-full max-w-lg rounded-3xl border border-white/[0.08] bg-[#11141c]/85 p-6 shadow-xl shadow-black/20 sm:p-8"
         >
           {/* Mobile logo (hidden on desktop) */}
           <div className="lg:hidden text-center mb-8">
@@ -350,12 +326,6 @@ export default function RegisterPage() {
             </Link>
           </p>
 
-          <p className="mt-4 text-center text-[11px] text-slate-600">
-            By signing up, you agree to our{' '}
-            <a href="#" className="text-slate-500 hover:text-slate-400 underline">Terms</a>
-            {' & '}
-            <a href="#" className="text-slate-500 hover:text-slate-400 underline">Privacy Policy</a>
-          </p>
         </motion.div>
       </div>
     </div>

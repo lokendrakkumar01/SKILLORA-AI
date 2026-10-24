@@ -12,7 +12,7 @@ export function ProtectedLayout({ children, title }: { children: React.ReactNode
   if (!user) return <Navigate to="/login" replace />;
 
   return (
-    <div className="app-shell flex h-screen overflow-hidden">
+    <div className="app-shell flex h-dvh overflow-hidden">
       <AppSidebar />
       <div className="app-shell__content flex-1 flex flex-col overflow-hidden min-w-0">
         <AppTopbar title={title} />

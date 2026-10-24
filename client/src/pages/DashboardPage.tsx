@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  Zap, Flame, BookOpen, Trophy, TrendingUp, Plus, ArrowRight,
-  Target, Clock, BarChart2, Star, CheckCircle2
+  Zap, Flame, BookOpen, Trophy, Plus, ArrowRight,
+  Target, BarChart2, Star
 } from 'lucide-react';
 import { progressApi } from '../api/roadmaps';
 import { ProtectedLayout } from '../components/layout/AppLayout';
@@ -23,12 +23,24 @@ export default function DashboardPage() {
   const { user } = useAuth();
   const [overview, setOverview] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
-  useEffect(() => {
+  const loadOverview = useCallback(() => {
+    setLoading(true);
+    setLoadError(false);
     progressApi.overview()
       .then((res) => setOverview(res.data))
-      .catch(() => setOverview(null))
+      .catch(() => { setOverview(null); setLoadError(true); })
       .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    progressApi.overview()
+      .then((res) => { if (active) setOverview(res.data); })
+      .catch(() => { if (active) { setOverview(null); setLoadError(true); } })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
   }, []);
 
   const stats = [
@@ -48,18 +60,37 @@ export default function DashboardPage() {
     });
     return days.map((d) => ({ day: d, minutes: map[d] || 0 }));
   })();
+  const nextRoadmap = overview?.roadmaps?.find((roadmap: any) => roadmap.status !== 'completed') || overview?.roadmaps?.[0];
+  const hasActivity = activityData.some((day) => day.minutes > 0);
 
   return (
     <ProtectedLayout title="Dashboard">
-      <div className="max-w-6xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-8">
         {/* Welcome */}
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="text-2xl font-black text-white">
-            Welcome back, <span className="gradient-text">{user?.name?.split(' ')[0]}</span>! 👋
-          </h1>
-          <p className="text-slate-400 text-sm mt-1">
-            {overview?.streak > 0 ? `🔥 You're on a ${overview.streak}-day streak! Keep it going.` : "Let's start learning today!"}
-          </p>
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+          className="relative overflow-hidden rounded-3xl border border-violet-400/15 bg-gradient-to-br from-[#17172a] via-[#121522] to-[#10131a] p-6 sm:p-8">
+          <div className="pointer-events-none absolute -right-16 -top-24 h-64 w-64 rounded-full bg-violet-500/10 blur-3xl" />
+          <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-violet-300">Your learning space</p>
+              <h1 className="mt-2 text-3xl font-black tracking-tight text-white sm:text-4xl">
+                Welcome back, <span className="gradient-text">{user?.name?.split(' ')[0] || 'Learner'}</span>
+              </h1>
+              <p className="mt-2 text-sm text-slate-400">
+                {overview?.streak > 0 ? `You’re on a ${overview.streak}-day streak. Keep your momentum going.` : 'A little progress today can move your learning forward.'}
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {nextRoadmap && (
+                <Button variant="secondary" onClick={() => navigate(`/roadmap/${nextRoadmap._id}`)} icon={<BookOpen className="h-4 w-4" />}>
+                  Continue learning
+                </Button>
+              )}
+              <Button variant="primary" onClick={() => navigate('/onboarding')} icon={<Plus className="h-4 w-4" />}>
+                Create learning path
+              </Button>
+            </div>
+          </div>
         </motion.div>
 
         {/* Stats */}
@@ -71,18 +102,28 @@ export default function DashboardPage() {
                 <stat.icon className={`w-5 h-5 ${stat.color}`} />
               </div>
               <div className="text-2xl font-black text-white">
-                {loading ? <div className="shimmer h-7 w-16 rounded" /> : <AnimatedCounter target={stat.value} suffix={stat.suffix} />}
+                {loading ? <div className="shimmer h-7 w-16 rounded" /> : loadError ? '—' : <AnimatedCounter target={stat.value} suffix={stat.suffix} />}
               </div>
               <div className="text-xs text-slate-400 mt-1">{stat.label}</div>
             </motion.div>
           ))}
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
+        {loadError && (
+          <div role="alert" className="flex flex-col gap-3 rounded-2xl border border-amber-400/20 bg-amber-400/[0.06] p-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm text-amber-100">We couldn’t load your learning progress. Your dashboard data may be out of date.</p>
+            <Button variant="outline" size="sm" loading={loading} onClick={loadOverview}>Try again</Button>
+          </div>
+        )}
+
+        <div className="grid lg:grid-cols-[minmax(0,1.7fr)_minmax(300px,0.9fr)] gap-6 xl:gap-8">
           {/* Active Roadmaps */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-base font-bold text-white">Active Learning Paths</h2>
+              <div>
+                <h2 className="text-lg font-bold text-white">Your learning paths</h2>
+                <p className="mt-1 text-sm text-slate-500">Pick up where you left off or start with a new goal.</p>
+              </div>
               <Button variant="outline" size="sm" onClick={() => navigate('/onboarding')} icon={<Plus className="w-3.5 h-3.5" />}>
                 New Path
               </Button>
@@ -90,6 +131,8 @@ export default function DashboardPage() {
 
             {loading ? (
               <div className="flex items-center justify-center py-12"><LoadingSpinner size="lg" /></div>
+            ) : loadError ? (
+              <div className="rounded-2xl border border-white/[0.08] bg-[#12151e] p-6 text-sm text-slate-400">Learning paths are unavailable until your progress loads.</div>
             ) : !overview?.roadmaps?.length ? (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                 className="p-10 rounded-2xl border border-dashed border-violet-500/25 text-center">
@@ -143,8 +186,8 @@ export default function DashboardPage() {
               {loading ? (
                 <div className="shimmer h-32 rounded-xl" />
               ) : (
-                <ResponsiveContainer width="100%" height={120}>
-                  <BarChart data={activityData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                <ResponsiveContainer width="100%" height={180}>
+                  <BarChart data={activityData} margin={{ top: 8, right: 4, left: -16, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
                     <XAxis dataKey="day" tick={{ fill: '#64748b', fontSize: 10 }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fill: '#64748b', fontSize: 10 }} axisLine={false} tickLine={false} />
@@ -152,6 +195,9 @@ export default function DashboardPage() {
                     <Bar dataKey="minutes" fill="#7C3AED" radius={[4, 4, 0, 0]} opacity={0.85} />
                   </BarChart>
                 </ResponsiveContainer>
+              )}
+              {!loading && !hasActivity && (
+                <p className="-mt-3 text-center text-xs text-slate-500">Study minutes will appear here as you complete lessons.</p>
               )}
             </Card>
 

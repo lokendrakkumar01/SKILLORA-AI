@@ -25,7 +25,7 @@ export const progressApi = {
 
 export const aiApi = {
   chat: (message: string, context?: any, history?: any[]) =>
-    apiClient.post('/ai/chat', { message, context, history }),
+    apiClient.post('/ai/chat', { message, context, history }, { timeout: 60000 }),
 };
 
 export const profileApi = {

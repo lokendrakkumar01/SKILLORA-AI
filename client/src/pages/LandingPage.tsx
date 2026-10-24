@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
-  Zap, Target, TrendingUp, BookOpen, Brain, MessageCircle, BarChart3,
-  Trophy, ArrowRight, ChevronDown, CheckCircle2, Users, Clock,
-  PlayCircle, Sparkles, Compass, ShieldCheck, Flame, Laptop, GraduationCap,
-  Star, Globe, Lock, Unlock
+  Zap, Target, TrendingUp, BookOpen, Brain, BarChart3,
+  Trophy, ArrowRight, ChevronDown, CheckCircle2, Clock,
+  PlayCircle, Sparkles, Compass, ShieldCheck, Flame, Laptop,
+  Globe, Lock
 } from 'lucide-react';
 import { PublicNavbar } from '../components/layout/Navbar';
-import { AnimatedCounter } from '../components/ui/AnimatedCounter';
 
 /* ─── Data ─────────────────────────────────────────────────────────────────── */
 
@@ -114,7 +113,6 @@ const POPULAR_PATHS = [
     category: 'Software Engineering',
     duration: '90 Days',
     level: 'Beginner → Pro',
-    learners: '14.2k',
     icon: Laptop,
     accent: 'violet',
   },
@@ -123,7 +121,6 @@ const POPULAR_PATHS = [
     category: 'Artificial Intelligence',
     duration: '75 Days',
     level: 'Intermediate',
-    learners: '9.8k',
     icon: Brain,
     accent: 'indigo',
   },
@@ -132,7 +129,6 @@ const POPULAR_PATHS = [
     category: 'Data Science',
     duration: '45 Days',
     level: 'Beginner Friendly',
-    learners: '18.1k',
     icon: BarChart3,
     accent: 'blue',
   },
@@ -141,7 +137,6 @@ const POPULAR_PATHS = [
     category: 'Product Design',
     duration: '40 Days',
     level: 'All Levels',
-    learners: '8.4k',
     icon: Sparkles,
     accent: 'pink',
   },
@@ -150,7 +145,6 @@ const POPULAR_PATHS = [
     category: 'Security & Networks',
     duration: '60 Days',
     level: 'Intermediate',
-    learners: '6.7k',
     icon: ShieldCheck,
     accent: 'emerald',
   },
@@ -159,7 +153,6 @@ const POPULAR_PATHS = [
     category: 'Infrastructure',
     duration: '60 Days',
     level: 'Intermediate',
-    learners: '7.3k',
     icon: Globe,
     accent: 'amber',
   },
@@ -195,12 +188,6 @@ const FAQS = [
     q: 'How does the gamification and streak system work?',
     a: 'You earn XP for reading lessons and passing quiz checkpoints. Daily streaks record your active study days, rewarding consistent dedication without overwhelming you with pressure.',
   },
-];
-
-const STATS = [
-  { value: 50, suffix: 'k+', label: 'Active Learners', color: 'text-white' },
-  { value: 200, suffix: '+', label: 'Curated Paths', color: 'text-white' },
-  { value: 98, suffix: '%', label: 'Goal Success', color: 'text-violet-400' },
 ];
 
 /* ─── Mockup Roadmap Steps ──────────────────────────────────────────────────── */
@@ -284,8 +271,8 @@ export default function LandingPage() {
           />
         </div>
 
-        <div className="relative w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
-          <div className="grid lg:grid-cols-2 gap-14 xl:gap-20 items-center">
+        <div className="landing-container landing-hero-container relative w-full max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] gap-12 xl:gap-16 items-center">
 
             {/* ── Left column ───────────────────────────────── */}
             <div className="flex flex-col items-start">
@@ -300,7 +287,7 @@ export default function LandingPage() {
 
               {/* Headline */}
               <motion.h1 {...fadeUp(0.08)}
-                className="text-[2.6rem] sm:text-5xl lg:text-[3.6rem] font-black leading-[1.08] tracking-tight mb-6 text-white"
+                className="text-[2.6rem] sm:text-5xl lg:text-[2.95rem] xl:text-[3.1rem] font-black leading-[1.08] tracking-tight mb-6 text-white"
               >
                 Stop Wondering<br />
                 <span className="gradient-text-accent">What to Learn</span> Next.
@@ -352,16 +339,9 @@ export default function LandingPage() {
               </motion.div>
 
               {/* Stats */}
-              <motion.div {...fadeUp(0.34)}
-                className="grid grid-cols-3 gap-6 sm:gap-10 pt-8 border-t border-white/[0.07] w-full max-w-md"
-              >
-                {STATS.map(s => (
-                  <div key={s.label}>
-                    <div className={`text-2xl sm:text-3xl font-extrabold ${s.color}`}>
-                      <AnimatedCounter target={s.value} suffix={s.suffix} />
-                    </div>
-                    <div className="text-[11px] text-slate-500 mt-0.5 font-medium">{s.label}</div>
-                  </div>
+              <motion.div {...fadeUp(0.34)} className="flex flex-wrap gap-x-7 gap-y-3 pt-6 border-t border-white/[0.07] w-full max-w-lg text-xs text-slate-400">
+                {['Plans shaped around your goal', 'Lessons with practice', 'Progress you can track'].map((item) => (
+                  <span key={item} className="inline-flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-violet-400" />{item}</span>
                 ))}
               </motion.div>
             </div>
@@ -374,7 +354,7 @@ export default function LandingPage() {
               className="hidden lg:block"
             >
               {/* Outer glow ring */}
-              <div className="rounded-3xl p-px bg-gradient-to-b from-violet-500/40 via-indigo-500/20 to-transparent shadow-2xl">
+              <div className="rounded-3xl p-px bg-gradient-to-b from-violet-500/30 via-indigo-500/15 to-transparent shadow-xl shadow-violet-950/20">
                 <div className="bg-[#0d0d18] rounded-[23px] p-6 border border-white/[0.06]">
 
                   {/* Window bar */}
@@ -385,8 +365,8 @@ export default function LandingPage() {
                       <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/90" />
                     </div>
                     <span className="text-[11px] font-mono text-slate-500">skillora.ai/roadmap</span>
-                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">
-                      Live Engine
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-violet-500/10 text-violet-300 border border-violet-500/20">
+                      Product preview
                     </span>
                   </div>
 
@@ -470,10 +450,9 @@ export default function LandingPage() {
       <div className="border-y border-white/[0.06] bg-[#090910] py-5">
         <div className="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-10 text-center">
           {[
-            { icon: Star, text: '4.9/5 Average Rating', color: 'text-amber-400' },
-            { icon: Users, text: '50,000+ Active Learners', color: 'text-violet-400' },
-            { icon: ShieldCheck, text: 'No Credit Card Required', color: 'text-emerald-400' },
-            { icon: Zap, text: 'AI Roadmap in 30 Seconds', color: 'text-blue-400' },
+            { icon: Target, text: 'Choose your learning goal', color: 'text-violet-400' },
+            { icon: BookOpen, text: 'Follow a structured roadmap', color: 'text-cyan-400' },
+            { icon: ShieldCheck, text: 'Practice and track your progress', color: 'text-emerald-400' },
           ].map(({ icon: Icon, text, color }) => (
             <div key={text} className="flex items-center gap-2 text-xs font-semibold text-slate-400">
               <Icon className={`w-4 h-4 ${color}`} />
@@ -487,7 +466,7 @@ export default function LandingPage() {
           HOW IT WORKS
           ══════════════════════════════════════════════════ */}
       <section id="how-it-works" className="py-28 md:py-36 relative border-b border-white/[0.06] bg-[#090910]">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+        <div className="landing-container max-w-7xl mx-auto">
 
           <div className="text-center mb-20">
             <motion.div {...fadeUpView(0)}>
@@ -539,7 +518,7 @@ export default function LandingPage() {
           FEATURES GRID
           ══════════════════════════════════════════════════ */}
       <section id="features" className="py-28 md:py-36 relative border-b border-white/[0.06]">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+        <div className="landing-container max-w-7xl mx-auto">
 
           <div className="text-center mb-20">
             <motion.div {...fadeUpView(0)}>
@@ -582,7 +561,7 @@ export default function LandingPage() {
           POPULAR LEARNING PATHS
           ══════════════════════════════════════════════════ */}
       <section id="paths" className="py-28 md:py-36 relative border-b border-white/[0.06] bg-[#090910]">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+        <div className="landing-container max-w-7xl mx-auto">
 
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
             <div>
@@ -640,7 +619,7 @@ export default function LandingPage() {
                       <Clock className="w-3.5 h-3.5" /> {path.duration}
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <Users className="w-3.5 h-3.5" /> {path.learners} learners
+                      <BookOpen className="w-3.5 h-3.5" /> Self-paced roadmap
                     </span>
                   </div>
                 </motion.div>
@@ -654,7 +633,7 @@ export default function LandingPage() {
           AI TUTOR SHOWCASE
           ══════════════════════════════════════════════════ */}
       <section id="tutor" className="py-28 md:py-36 relative border-b border-white/[0.06]">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+        <div className="landing-container max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
 
             {/* Left narrative */}
@@ -852,7 +831,7 @@ export default function LandingPage() {
                 </h2>
 
                 <p className="text-sm sm:text-base text-slate-400 max-w-lg mx-auto leading-relaxed mb-10">
-                  Join thousands of students and career switchers building personalized roadmaps with AI-guided learning.
+                  Start with a goal, follow a clear learning path, and get help when a lesson feels difficult.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -872,7 +851,7 @@ export default function LandingPage() {
 
                 {/* Trust note */}
                 <p className="mt-8 text-xs text-slate-600">
-                  Free to start · No credit card required · Cancel anytime
+                  Start with one goal · Learn at your own pace
                 </p>
               </div>
             </div>
@@ -884,7 +863,7 @@ export default function LandingPage() {
           FOOTER
           ══════════════════════════════════════════════════ */}
       <footer className="border-t border-white/[0.07] py-12 bg-[#050508]">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div className="landing-container max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
 
           {/* Brand */}
           <div className="flex items-center gap-3">
@@ -899,8 +878,8 @@ export default function LandingPage() {
 
           {/* Links */}
           <div className="flex items-center gap-6 text-xs text-slate-500">
-            {['Privacy Policy', 'Terms of Service', 'Contact Us'].map(l => (
-              <a key={l} href="#" className="hover:text-slate-300 transition-colors">{l}</a>
+            {[['How it works', '#how-it-works'], ['Features', '#features'], ['FAQ', '#faq']].map(([label, href]) => (
+              <a key={label} href={href} className="hover:text-slate-300 transition-colors">{label}</a>
             ))}
           </div>
 

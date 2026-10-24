@@ -1,10 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
+:root {
+  color-scheme: dark;
+  --surface-root: #0b0d12;
+  --surface-sidebar: #0e1017;
+  --surface-panel: #12151e;
+  --surface-raised: #171b26;
+  --text-primary: #f3f4f8;
+  --text-secondary: #a0a8b8;
+  --text-muted: #717b8d;
+  --accent-primary: #8b7bff;
+  --accent-secondary: #42c7db;
+  --border-subtle: rgba(164, 174, 197, .12);
+  --radius-panel: 18px;
+  --content-width: 1280px;
+}
+
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 html {
@@ -13,8 +27,8 @@ html {
 }
 
 body {
-  background-color: #08090e;
-  color: #f1f5f9;
+  background-color: var(--surface-root);
+  color: var(--text-primary);
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -27,8 +41,8 @@ button { cursor: pointer; }
 
 .app-shell {
   background:
-    radial-gradient(ellipse at 72% -18%, rgba(93, 55, 180, .15), transparent 38%),
-    #08090e;
+    radial-gradient(ellipse at 72% -18%, rgba(93, 55, 180, .11), transparent 38%),
+    var(--surface-root);
 }
 .app-shell__content { position: relative; }
 .app-topbar {
@@ -37,8 +51,22 @@ button { cursor: pointer; }
   border-color: rgba(148, 163, 184, .11);
 }
 .app-main { scrollbar-gutter: stable; }
-.app-main__inner { min-height: 100%; }
+.app-main__inner { min-height: 100%; width: 100%; margin-inline: auto; }
+.app-topbar { min-width: 0; }
+.app-main :is(input, textarea, select) { max-width: 100%; }
+.app-main :is(h1, h2, h3) { text-wrap: pretty; }
 .app-mobile-nav { display: none; }
+.public-navbar__inner {
+  width: min(100%, var(--content-width));
+  padding-inline: clamp(20px, 4vw, 56px);
+}
+.landing-container {
+  width: min(100%, var(--content-width));
+  padding-inline: clamp(20px, 4.5vw, 64px);
+}
+.landing-hero-container {
+  padding-inline: clamp(24px, 5vw, 72px);
+}
 
 /* Consistent, softly lit surfaces across all signed-in screens. */
 .app-shell main [class*="rounded-2xl"][class*="border"] {
@@ -93,8 +121,8 @@ button { cursor: pointer; }
 .glass-panel-hover:hover {
   background: rgba(22, 22, 38, 0.9);
   border-color: rgba(139, 92, 246, 0.35);
-  box-shadow: 0 20px 40px -15px rgba(124, 58, 237, 0.25);
-  transform: translateY(-4px);
+  box-shadow: 0 14px 34px -20px rgba(124, 58, 237, 0.32);
+  transform: translateY(-2px);
 }
 
 .gradient-text {
@@ -156,12 +184,12 @@ button { cursor: pointer; }
 
 .btn-primary-glow {
   background: linear-gradient(135deg, #7c3aed, #4f46e5);
-  box-shadow: 0 0 25px -4px rgba(124, 58, 237, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 22px -14px rgba(124, 58, 237, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.18);
   transition: all 0.25s ease;
 }
 .btn-primary-glow:hover {
   background: linear-gradient(135deg, #8b5cf6, #6366f1);
-  box-shadow: 0 0 35px -2px rgba(124, 58, 237, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+  box-shadow: 0 10px 25px -14px rgba(124, 58, 237, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.28);
   transform: translateY(-1px);
 }
 
@@ -235,11 +263,21 @@ code, pre {
 }
 
 @media (max-width: 640px) {
+  .landing-container { padding-inline: 20px; }
+  .landing-hero-container { padding-inline: 24px; }
   .app-topbar { height: 58px; padding-left: 16px; padding-right: 16px; }
   .app-main { padding: 18px 14px 14px; }
   .app-shell main [class*="p-8"] { padding: 1.25rem; }
   .app-shell main [class*="p-6"] { padding: 1.1rem; }
   .app-shell main [class*="p-5"] { padding: 1rem; }
+}
+
+@media (min-width: 1024px) {
+  .app-main { padding: 28px 36px; }
+}
+
+@media (min-width: 1440px) {
+  .app-main__inner { max-width: var(--content-width); }
 }
 
 @media (prefers-reduced-motion: reduce) {

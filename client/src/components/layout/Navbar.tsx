@@ -33,7 +33,7 @@ export function PublicNavbar() {
           : 'bg-transparent border-b border-transparent'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div className="public-navbar__inner max-w-7xl mx-auto h-20 flex items-center justify-between">
         {/* Brand Logo */}
         <Link to="/" className="flex items-center gap-3 group">
           <div className="relative w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 via-indigo-600 to-cyan-400 p-[1px] shadow-lg shadow-violet-500/25 group-hover:shadow-violet-500/50 transition-all">
@@ -164,6 +164,9 @@ export function AppSidebar() {
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
+          type="button"
+          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          aria-expanded={!collapsed}
           className="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-white/[0.05] ml-auto"
         >
           <Menu className="w-4 h-4" />
@@ -177,6 +180,7 @@ export function AppSidebar() {
             <Link
               key={href}
               to={href}
+              aria-current={active ? 'page' : undefined}
               className={`flex items-center gap-3.5 px-3.5 py-3 rounded-xl text-xs font-semibold transition-all duration-200 ${
                 active
                   ? 'bg-gradient-to-r from-violet-600/20 to-indigo-600/10 text-violet-300 border border-violet-500/30 shadow-md shadow-violet-500/10'
@@ -264,7 +268,7 @@ export function AppTopbar({ title }: { title?: string }) {
             <span className="text-xs font-extrabold tracking-wide text-white">SKILLORA <span className="text-violet-300">AI</span></span>
           </Link>
         </div>
-        {title && <h1 className="hidden sm:block text-sm font-bold text-slate-200 tracking-tight">{title}</h1>}
+        {title && <h1 className="min-w-0 max-w-[28vw] truncate border-l border-white/10 pl-3 text-xs font-bold tracking-tight text-slate-200 sm:max-w-none sm:text-sm">{title}</h1>}
       </div>
 
       {user && (
