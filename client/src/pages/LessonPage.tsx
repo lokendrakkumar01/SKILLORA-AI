@@ -13,11 +13,13 @@ import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
 
 interface ChatMsg { role: 'user' | 'assistant'; content: string }
+interface RoadmapContext { goal?: string; level?: string }
 
 export default function LessonPage() {
   const { roadmapId, stepId } = useParams();
   const navigate = useNavigate();
   const [step, setStep] = useState<any>(null);
+  const [roadmapContext, setRoadmapContext] = useState<RoadmapContext>({});
   const [loading, setLoading] = useState(true);
   const [completing, setCompleting] = useState(false);
   const [tutorOpen, setTutorOpen] = useState(false);
@@ -29,7 +31,10 @@ export default function LessonPage() {
   useEffect(() => {
     if (!roadmapId || !stepId) return;
     lessonsApi.get(stepId, roadmapId)
-      .then((res) => setStep(res.data.step))
+      .then((res) => {
+        setStep(res.data.step);
+        setRoadmapContext(res.data.roadmapContext || {});
+      })
       .catch(() => { toast.error('Failed to load lesson'); navigate(-1); })
       .finally(() => setLoading(false));
   }, [roadmapId, stepId]);
@@ -56,17 +61,24 @@ export default function LessonPage() {
   };
 
   const sendChat = async () => {
-    if (!chatInput.trim()) return;
+    if (!chatInput.trim() || chatLoading) return;
     const msg = chatInput.trim();
     setChatInput('');
     const newHistory: ChatMsg[] = [...chatHistory, { role: 'user', content: msg }];
     setChatHistory(newHistory);
     setChatLoading(true);
     try {
-      const res = await aiApi.chat(msg, { goal: step?.title, lesson: step?.title, level: 'beginner' }, newHistory);
+      const res = await aiApi.chat(msg, {
+        ...roadmapContext,
+        lesson: step?.title,
+        content: step?.content,
+        examples: step?.examples,
+        exercises: step?.exercises,
+      }, chatHistory);
       setChatHistory([...newHistory, { role: 'assistant', content: res.data.response }]);
-    } catch {
-      setChatHistory([...newHistory, { role: 'assistant', content: 'Sorry, I\'m having trouble connecting. Try again in a moment!' }]);
+    } catch (error: any) {
+      const message = error.response?.data?.error || 'The AI tutor could not reply. Check your connection and try again.';
+      setChatHistory([...newHistory, { role: 'assistant', content: message }]);
     } finally {
       setChatLoading(false);
     }
@@ -182,7 +194,7 @@ export default function LessonPage() {
                 <Brain className="w-3.5 h-3.5 text-white" />
               </div>
               <span className="text-sm font-bold text-white">AI Tutor</span>
-              <Badge variant="green" size="sm" className="ml-auto">Online</Badge>
+              <Badge variant="violet" size="sm" className="ml-auto">Lesson-aware</Badge>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-0">
               {chatHistory.length === 0 && (
@@ -228,7 +240,7 @@ export default function LessonPage() {
             <div className="p-3 border-t border-white/[0.06]">
               <div className="flex gap-2">
                 <input value={chatInput} onChange={(e) => setChatInput(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && sendChat()}
+                  onKeyDown={(e) => e.key === 'Enter' && !chatLoading && sendChat()}
                   placeholder="Ask about this lesson..."
                   className="flex-1 px-3 py-2 rounded-xl bg-[#111118] border border-white/[0.08] text-slate-200 text-xs outline-none focus:border-violet-500" />
                 <button onClick={sendChat} disabled={chatLoading || !chatInput.trim()}
@@ -250,6 +262,9 @@ export default function LessonPage() {
         {tutorOpen && (
           <div className="xl:hidden fixed inset-x-0 bottom-0 z-30 bg-[#0D0D18] border-t border-white/[0.06] rounded-t-3xl p-4 shadow-2xl" style={{ maxHeight: '60vh' }}>
             <div className="overflow-y-auto space-y-3 mb-3" style={{ maxHeight: 'calc(60vh - 80px)' }}>
+              {chatHistory.length === 0 && (
+                <p className="text-xs text-slate-400 px-1 py-2">Ask about this lesson. The tutor can use the lesson text, examples, and exercises to tailor its answer.</p>
+              )}
               {chatHistory.map((msg, i) => (
                 <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'gap-2'}`}>
                   {msg.role === 'assistant' && <Brain className="w-5 h-5 text-violet-400 shrink-0 mt-1" />}
@@ -261,11 +276,11 @@ export default function LessonPage() {
             </div>
             <div className="flex gap-2">
               <input value={chatInput} onChange={(e) => setChatInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && sendChat()}
+                onKeyDown={(e) => e.key === 'Enter' && !chatLoading && sendChat()}
                 placeholder="Ask the AI tutor..."
                 className="flex-1 px-3 py-2.5 rounded-xl bg-[#111118] border border-white/[0.08] text-slate-200 text-sm outline-none focus:border-violet-500" />
-              <button onClick={sendChat} disabled={chatLoading}
-                className="w-10 h-10 rounded-xl bg-violet-600 flex items-center justify-center text-white">
+              <button onClick={sendChat} disabled={chatLoading || !chatInput.trim()}
+                className="w-10 h-10 rounded-xl bg-violet-600 flex items-center justify-center text-white disabled:opacity-40">
                 <Send className="w-4 h-4" />
               </button>
             </div>

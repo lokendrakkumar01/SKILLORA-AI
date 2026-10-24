@@ -90,10 +90,10 @@ Create `server/.env`:
 ```env
 NODE_ENV=development
 PORT=5000
-MONGODB_URI=mongodb://versecolor7_db_user:Lg9exoFnIzGsS2N4@ac-h0hrfjj-shard-00-00.oyviqrq.mongodb.net:27017,ac-h0hrfjj-shard-00-01.oyviqrq.mongodb.net:27017,ac-h0hrfjj-shard-00-02.oyviqrq.mongodb.net:27017/skillora?ssl=true&replicaSet=atlas-9n2zm1-shard-0&authSource=admin&compressors=zlib
+MONGODB_URI=your_mongodb_atlas_connection_string
 JWT_SECRET=your_very_long_random_secret_key_change_this
-AI_API_KEY=your_openai_api_key_optional
-AI_MODEL=gpt-3.5-turbo
+GEMINI_API_KEY=your_google_ai_studio_api_key
+GEMINI_MODEL=gemini-3.8-flash
 CLIENT_URL=http://localhost:5173
 ```
 
@@ -163,8 +163,8 @@ Open **http://localhost:5173** in your browser.
 | `NODE_ENV` | `production` |
 | `MONGODB_URI` | your MongoDB Atlas connection string |
 | `JWT_SECRET` | a long random secret string |
-| `AI_API_KEY` | your OpenAI API key (optional) |
-| `AI_MODEL` | `gpt-3.5-turbo` |
+| `GEMINI_API_KEY` | your Google AI Studio API key |
+| `GEMINI_MODEL` | `gemini-3.8-flash` |
 | `CLIENT_URL` | your Render URL (e.g. `https://skillora-ai.onrender.com`) |
 
 ### MongoDB Atlas Network Access

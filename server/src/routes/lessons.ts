@@ -35,7 +35,11 @@ router.get('/:stepId', auth, async (req: AuthRequest, res: Response) => {
       stepId: req.params.stepId,
     });
 
-    res.json({ step: foundStep, progress });
+    res.json({
+      step: foundStep,
+      progress,
+      roadmapContext: { goal: roadmap.goal, level: roadmap.level },
+    });
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch lesson' });
   }

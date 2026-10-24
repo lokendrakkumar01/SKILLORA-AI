@@ -1,30 +1,44 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenAI } from '@google/genai';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
+const DEFAULT_MODEL = 'gemini-3.8-flash';
+const MAX_HISTORY_ITEMS = 12;
+const MAX_HISTORY_CHARS = 2_000;
 
-let genAI: GoogleGenerativeAI | null = null;
+let cachedClient: { apiKey: string; client: GoogleGenAI } | null = null;
 
-function getGenAI(): GoogleGenerativeAI | null {
-  if (!GEMINI_API_KEY) return null;
-  if (!genAI) {
-    genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+function getClient(): GoogleGenAI | null {
+  const apiKey = process.env.GEMINI_API_KEY?.trim();
+  if (!apiKey) return null;
+  if (!cachedClient || cachedClient.apiKey !== apiKey) {
+    cachedClient = { apiKey, client: new GoogleGenAI({ apiKey }) };
   }
-  return genAI;
+  return cachedClient.client;
 }
 
-async function callGemini(prompt: string): Promise<string | null> {
-  const ai = getGenAI();
-  if (!ai) {
-    console.warn('GEMINI_API_KEY not set — AI features unavailable');
-    return null;
-  }
+function getModel(): string {
+  return process.env.GEMINI_MODEL?.trim() || DEFAULT_MODEL;
+}
+
+export function isConfigured(): boolean {
+  return Boolean(process.env.GEMINI_API_KEY?.trim());
+}
+
+async function generateText(
+  prompt: string,
+  config?: { systemInstruction?: string; responseMimeType?: string; maxOutputTokens?: number }
+): Promise<string | null> {
+  const client = getClient();
+  if (!client) return null;
+
   try {
-    const model = ai.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    return response.text() || null;
-  } catch (err) {
-    console.error('Gemini AI call failed:', err);
+    const response = await client.models.generateContent({
+      model: getModel(),
+      contents: prompt,
+      config,
+    });
+    return response.text?.trim() || null;
+  } catch (error) {
+    console.error('Gemini request failed:', error instanceof Error ? error.message : 'Unknown provider error');
     return null;
   }
 }
@@ -45,7 +59,7 @@ Target: ${targetDays} days
 Preferred format: ${format}
 Desired outcome: ${outcome}
 
-Return ONLY valid JSON with this exact structure (no markdown, no extra text):
+Return only JSON with this structure:
 {
   "title": "string",
   "description": "string",
@@ -65,18 +79,13 @@ Return ONLY valid JSON with this exact structure (no markdown, no extra text):
             {
               "title": "string",
               "description": "string",
-              "content": "Detailed lesson content here (2-3 paragraphs)",
-              "examples": "Practical examples here",
-              "exercises": "Practice exercises here",
+              "content": "Detailed lesson content in 2-3 paragraphs",
+              "examples": "Practical examples",
+              "exercises": "Practice exercises",
               "estimatedMinutes": 20,
               "order": 1,
               "quizQuestions": [
-                {
-                  "question": "string",
-                  "options": ["A", "B", "C", "D"],
-                  "correct": 0,
-                  "explanation": "string"
-                }
+                { "question": "string", "options": ["A", "B", "C", "D"], "correct": 0, "explanation": "string" }
               ]
             }
           ]
@@ -86,37 +95,86 @@ Return ONLY valid JSON with this exact structure (no markdown, no extra text):
   ]
 }
 
-Make it practical, progressive, and appropriate for the level and timeline. Include 2-4 phases, 2-3 modules per phase, 2-3 steps per module.`;
+Make the curriculum practical, progressive, and appropriate for the learner's level and timeline. Include 2-4 phases, 2-3 modules per phase, and 2-3 lessons per module.`;
 
-  const raw = await callGemini(prompt);
+  const raw = await generateText(prompt, { responseMimeType: 'application/json', maxOutputTokens: 8_000 });
   if (!raw) return null;
 
   try {
-    const cleaned = raw.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
     return JSON.parse(cleaned);
   } catch {
-    console.error('Failed to parse AI roadmap JSON');
+    console.error('Gemini returned invalid roadmap JSON');
     return null;
   }
 }
 
+type TutorContext = {
+  goal?: string;
+  lesson?: string;
+  level?: string;
+  content?: string;
+  examples?: string;
+  exercises?: string;
+};
+
+type TutorHistoryItem = { role: string; content: string };
+
+function normalizeHistory(history: TutorHistoryItem[]) {
+  const normalized: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = [];
+
+  for (const item of history.slice(-MAX_HISTORY_ITEMS)) {
+    const text = typeof item?.content === 'string' ? item.content.trim().slice(0, MAX_HISTORY_CHARS) : '';
+    if (!text || (item.role !== 'user' && item.role !== 'assistant' && item.role !== 'model')) continue;
+
+    const role = item.role === 'user' ? 'user' : 'model';
+    const previous = normalized[normalized.length - 1];
+    if (previous?.role === role) {
+      previous.parts[0].text = `${previous.parts[0].text}\n${text}`;
+    } else {
+      normalized.push({ role, parts: [{ text }] });
+    }
+  }
+
+  if (normalized[0]?.role === 'model') normalized.shift();
+  return normalized;
+}
+
 export async function chatWithTutor(
   message: string,
-  context: { goal?: string; lesson?: string; level?: string },
-  history: { role: string; content: string }[] = []
-): Promise<string> {
-  const recentHistory = history.slice(-6).map(h => `${h.role === 'user' ? 'Student' : 'Tutor'}: ${h.content}`).join('\n');
+  context: TutorContext = {},
+  history: TutorHistoryItem[] = []
+): Promise<string | null> {
+  const client = getClient();
+  if (!client) return null;
 
-  const prompt = `You are SKILLORA AI Tutor, an expert, encouraging learning assistant.
-Current context: Learning goal: "${context.goal || 'general learning'}", Lesson: "${context.lesson || 'general'}", Level: "${context.level || 'beginner'}".
-Be concise, clear, and helpful. Adapt explanations to the learner's level. Use examples. Be encouraging.
+  const systemInstruction = `You are SKILLORA AI Tutor, a patient and encouraging learning assistant. Give accurate, clear explanations at the learner's level. Use examples from their lesson when useful. Prefer concise answers, but explain enough for the learner to understand. Ask a short follow-up question when that would help them practice.
 
-${recentHistory ? `Conversation history:\n${recentHistory}\n` : ''}
-Student: ${message}
-Tutor:`;
+Learning goal: ${context.goal || 'General learning'}
+Current lesson: ${context.lesson || 'General'}
+Learner level: ${context.level || 'beginner'}
 
-  const response = await callGemini(prompt);
-  return response || "I'm having trouble connecting right now. Try rephrasing your question, or check out the lesson content for guidance. I'll be back online shortly!";
+Lesson content (reference material):
+${context.content || 'No lesson content supplied.'}
+
+Lesson examples:
+${context.examples || 'None supplied.'}
+
+Lesson exercises:
+${context.exercises || 'None supplied.'}`;
+
+  try {
+    const chat = client.chats.create({
+      model: getModel(),
+      config: { systemInstruction, maxOutputTokens: 1_000 },
+      history: normalizeHistory(history),
+    });
+    const response = await chat.sendMessage({ message: message.trim() });
+    return response.text?.trim() || null;
+  } catch (error) {
+    console.error('Gemini tutor request failed:', error instanceof Error ? error.message : 'Unknown provider error');
+    return null;
+  }
 }
 
 export async function generateQuizExplanation(
@@ -130,6 +188,6 @@ Their answer: ${userAnswer}
 Correct answer: ${correctAnswer}
 Give a brief, helpful explanation (2-3 sentences) of why the correct answer is right.`;
 
-  const response = await callGemini(prompt);
+  const response = await generateText(prompt, { maxOutputTokens: 300 });
   return response || `The correct answer is "${correctAnswer}". Review the lesson content for more details on this topic.`;
 }
