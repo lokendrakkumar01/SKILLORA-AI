@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { PageLoader } from './components/ui/LoadingSpinner';
 
 const LandingPage = lazy(() => import('./pages/LandingPage'));
@@ -26,7 +27,8 @@ const queryClient = new QueryClient({
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+      <ThemeProvider>
+       <BrowserRouter>
         <AuthProvider>
           <Suspense fallback={<PageLoader />}>
             <Routes>
@@ -58,7 +60,8 @@ export default function App() {
             }}
           />
         </AuthProvider>
-      </BrowserRouter>
+       </BrowserRouter>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

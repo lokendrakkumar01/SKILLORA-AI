@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  LayoutDashboard, Map, Trophy, User, LogOut, Menu, X, Zap, Flame, Sparkles, ArrowRight
+  LayoutDashboard, Map, Trophy, User, LogOut, Menu, X, Zap, Flame, Sparkles, ArrowRight, Moon, Sun
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 
 const NAV_LINKS = [
   { href: '#features', label: 'Features' },
@@ -149,7 +150,7 @@ export function AppSidebar() {
 
   return (
     <aside
-      className={`hidden lg:flex flex-col bg-[#090910] border-r border-white/[0.08] transition-all duration-300 ${
+      className={`app-sidebar hidden lg:flex flex-col bg-[#090910] border-r border-white/[0.08] transition-all duration-300 ${
         collapsed ? 'w-20' : 'w-64'
       }`}
     >
@@ -255,6 +256,7 @@ export function AppMobileNav() {
 
 export function AppTopbar({ title }: { title?: string }) {
   const { user } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   return (
@@ -273,6 +275,10 @@ export function AppTopbar({ title }: { title?: string }) {
 
       {user && (
         <div className="flex items-center gap-4">
+          <button type="button" onClick={toggleTheme} aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/[0.03] text-slate-300 transition hover:border-violet-400/30 hover:bg-violet-500/10 hover:text-violet-200">
+            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
           <div className="hidden sm:flex items-center gap-3 text-xs bg-white/[0.03] border border-white/[0.06] px-3.5 py-1.5 rounded-full">
             <span className="flex items-center gap-1.5 font-bold text-amber-300">
               <Zap className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
