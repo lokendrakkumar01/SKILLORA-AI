@@ -363,6 +363,13 @@ html[data-theme="light"] .app-sidebar [class*="bg-white/"] { background-color: r
 html[data-theme="light"] .app-sidebar [class*="border-white"] { border-color: rgba(51, 65, 85, .14); }
 html[data-theme="light"] .app-sidebar [class~="text-white"] { color: #1e293b; }
 html[data-theme="light"] .app-sidebar [class~="text-slate-400"] { color: #64748b; }
+html[data-theme="light"] .app-sidebar a[aria-current="page"] {
+  background: #fce7f3 !important;
+  border-color: #f9a8d4 !important;
+  box-shadow: none !important;
+  color: #9d174d !important;
+}
+html[data-theme="light"] .app-sidebar a[aria-current="page"] svg { color: #be185d !important; }
 html[data-theme="light"] .app-mobile-nav__link { color: #64748b; }
 html[data-theme="light"] .app-mobile-nav__link.is-active { color: #6d28d9; }
 html[data-theme="light"] .global-ai-panel { background: #fff; border-color: #e2e8f0; }
@@ -403,6 +410,16 @@ html[data-theme="light"] .global-ai-panel [class*="border-white"] { border-color
 [class*="shadow-violet-"] { --tw-shadow-color: rgba(214, 41, 118, .22) !important; }
 [class*="shadow-indigo-"] { --tw-shadow-color: rgba(150, 47, 191, .2) !important; }
 [class*="ring-violet-"] { --tw-ring-color: rgba(214, 41, 118, .4) !important; }
+html .app-main .ai-quiz-submit {
+  background: #c2185b !important;
+  color: #fff !important;
+}
+html .app-main .ai-quiz-submit:hover:not(:disabled) { background: #a31550 !important; }
+html .app-main .ai-quiz-submit:disabled {
+  background: #4b3442 !important;
+  color: #fff !important;
+  opacity: 1 !important;
+}
 .app-mobile-nav__link.is-active { color: #e1306c; }
 html[data-theme="light"] .app-mobile-nav__link.is-active { color: #d62976; }
 html[data-theme="light"] .app-mobile-nav__menu { background: #fff; border-color: #e2e8f0; }

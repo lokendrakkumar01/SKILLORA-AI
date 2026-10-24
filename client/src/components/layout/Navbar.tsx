@@ -194,7 +194,7 @@ export function AppSidebar() {
               aria-current={active ? 'page' : undefined}
               className={`flex items-center gap-3.5 px-3.5 py-3 rounded-xl text-xs font-semibold transition-all duration-200 ${
                 active
-                  ? 'bg-gradient-to-r from-violet-600/20 to-indigo-600/10 text-violet-300 border border-violet-500/30 shadow-md shadow-violet-500/10'
+                  ? 'bg-[#2b1422] text-white border border-pink-400/45 shadow-md shadow-pink-950/25'
                   : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]'
               }`}
             >
