@@ -119,7 +119,13 @@ button { cursor: pointer; }
   background: radial-gradient(circle at center, rgba(59, 130, 246, 0.15) 0%, rgba(6, 182, 212, 0.04) 50%, transparent 75%);
 }
 
-.grid-bg { background-color: #08090e; }
+.grid-bg {
+  background-color: #08090e;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
 .text-gradient {
   background: linear-gradient(135deg, #fff 10%, #c4b5fd 50%, #818cf8 100%);
   -webkit-background-clip: text;
