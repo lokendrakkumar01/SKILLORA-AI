@@ -4,44 +4,50 @@ import { useNavigate } from 'react-router-dom';
 import {
   Zap, Target, TrendingUp, BookOpen, Brain, MessageCircle, BarChart3,
   Trophy, ArrowRight, ChevronDown, CheckCircle2, Users, Clock,
-  PlayCircle, Sparkles, Compass, ShieldCheck, Flame, Laptop, GraduationCap
+  PlayCircle, Sparkles, Compass, ShieldCheck, Flame, Laptop, GraduationCap,
+  Star, Globe, Lock, Unlock
 } from 'lucide-react';
 import { PublicNavbar } from '../components/layout/Navbar';
 import { AnimatedCounter } from '../components/ui/AnimatedCounter';
 
-const POPULAR_GOALS = [
+/* ─── Data ─────────────────────────────────────────────────────────────────── */
+
+const ROTATING_GOALS = [
   'Full Stack Web Development',
-  'AI & Machine Learning Engineering',
+  'AI & Machine Learning',
   'Python for Data Science',
   'Cybersecurity & Ethical Hacking',
-  'Modern UI/UX Design System',
-  'Mobile App Development with React Native',
+  'UI/UX Design System',
+  'React Native Mobile Apps',
 ];
 
-const STEPS = [
+const HOW_IT_WORKS = [
   {
     step: '01',
     icon: Target,
-    title: 'Enter Any Ambition',
-    desc: 'Tell Skillora AI what you want to master, your weekly time availability, and current skill baseline.',
-    badge: 'Step 1: Goal Setup',
-    gradient: 'from-violet-500/20 to-purple-500/10'
+    badge: 'Goal Setup',
+    title: 'Enter Your Ambition',
+    desc: 'Tell Skillora what you want to master, your time availability, and current skill level.',
+    gradient: 'from-violet-600 to-indigo-600',
+    glow: 'shadow-violet-500/25',
   },
   {
     step: '02',
     icon: Compass,
-    title: 'Dynamic AI Curriculum',
-    desc: 'Get a comprehensive roadmap broken into structured phases, manageable modules, and interactive lessons.',
-    badge: 'Step 2: AI Generation',
-    gradient: 'from-indigo-500/20 to-blue-500/10'
+    badge: 'AI Generation',
+    title: 'Get a Dynamic Roadmap',
+    desc: 'Receive a personalized curriculum with phases, modules, lessons, and quiz checkpoints.',
+    gradient: 'from-indigo-600 to-blue-600',
+    glow: 'shadow-blue-500/25',
   },
   {
     step: '03',
     icon: TrendingUp,
+    badge: 'Continuous Growth',
     title: 'Practice & Prove Mastery',
-    desc: 'Learn through guided concepts, chat with your dedicated AI tutor, test yourself in quizzes, and earn verifiable XP.',
-    badge: 'Step 3: Continuous Growth',
-    gradient: 'from-cyan-500/20 to-emerald-500/10'
+    desc: 'Learn with your AI tutor, take adaptive quizzes, earn XP, and track real progress.',
+    gradient: 'from-cyan-600 to-emerald-600',
+    glow: 'shadow-emerald-500/25',
   },
 ];
 
@@ -49,50 +55,56 @@ const FEATURES = [
   {
     icon: Zap,
     title: 'AI Roadmap Engine',
-    desc: 'Generate tailored syllabi with prerequisites, estimated times, and milestone checkpoints for any subject.',
+    desc: 'Generate tailored syllabi with prerequisites, time estimates, and milestone checkpoints for any subject.',
     color: 'text-violet-400',
     bg: 'bg-violet-500/10',
-    border: 'border-violet-500/20'
+    border: 'border-violet-500/20',
+    hoverBorder: 'hover:border-violet-500/50',
   },
   {
     icon: BookOpen,
     title: 'Interactive Workspaces',
-    desc: 'Clean, distraction-free lessons featuring structured breakdowns, runnable code snippets, and hands-on exercises.',
+    desc: 'Clean, distraction-free lessons with structured breakdowns, code snippets, and hands-on exercises.',
     color: 'text-blue-400',
     bg: 'bg-blue-500/10',
-    border: 'border-blue-500/20'
+    border: 'border-blue-500/20',
+    hoverBorder: 'hover:border-blue-500/50',
   },
   {
     icon: Brain,
     title: 'Contextual AI Tutor',
-    desc: 'Ask questions directly within lessons. Get simplified analogies, code breakdowns, and hints without leaving your workspace.',
+    desc: 'Ask questions inside lessons. Get simplified analogies, code breakdowns, and hints without leaving.',
     color: 'text-cyan-400',
     bg: 'bg-cyan-500/10',
-    border: 'border-cyan-500/20'
+    border: 'border-cyan-500/20',
+    hoverBorder: 'hover:border-cyan-500/50',
   },
   {
     icon: ShieldCheck,
     title: 'Adaptive Quiz Engine',
-    desc: 'Evaluate your comprehension with instant feedback, deep answer explanations, and topic-level scoring.',
+    desc: 'Evaluate comprehension with instant feedback, deep answer explanations, and topic-level scoring.',
     color: 'text-emerald-400',
     bg: 'bg-emerald-500/10',
-    border: 'border-emerald-500/20'
+    border: 'border-emerald-500/20',
+    hoverBorder: 'hover:border-emerald-500/50',
   },
   {
     icon: BarChart3,
     title: 'Progress Intelligence',
-    desc: 'Measure your consistency with weekly study charts, streak tracking, and skill mastery percentages.',
+    desc: 'Measure consistency with weekly study charts, streak tracking, and skill mastery percentages.',
     color: 'text-amber-400',
     bg: 'bg-amber-500/10',
-    border: 'border-amber-500/20'
+    border: 'border-amber-500/20',
+    hoverBorder: 'hover:border-amber-500/50',
   },
   {
     icon: Trophy,
     title: 'Gamified Milestones',
-    desc: 'Level up with earned XP, maintain daily study streaks, unlock achievement badges, and celebrate progress.',
+    desc: 'Level up with earned XP, maintain daily streaks, unlock achievement badges, and celebrate progress.',
     color: 'text-pink-400',
     bg: 'bg-pink-500/10',
-    border: 'border-pink-500/20'
+    border: 'border-pink-500/20',
+    hoverBorder: 'hover:border-pink-500/50',
   },
 ];
 
@@ -101,380 +113,421 @@ const POPULAR_PATHS = [
     title: 'Full Stack Web Development',
     category: 'Software Engineering',
     duration: '90 Days',
-    level: 'Beginner to Pro',
-    learners: '14.2k learners',
+    level: 'Beginner → Pro',
+    learners: '14.2k',
     icon: Laptop,
-    accent: 'border-violet-500/30 hover:border-violet-500/60'
+    accent: 'violet',
   },
   {
     title: 'Applied Machine Learning',
     category: 'Artificial Intelligence',
     duration: '75 Days',
     level: 'Intermediate',
-    learners: '9.8k learners',
+    learners: '9.8k',
     icon: Brain,
-    accent: 'border-indigo-500/30 hover:border-indigo-500/60'
+    accent: 'indigo',
   },
   {
     title: 'Python for Data Analytics',
     category: 'Data Science',
     duration: '45 Days',
     level: 'Beginner Friendly',
-    learners: '18.1k learners',
+    learners: '18.1k',
     icon: BarChart3,
-    accent: 'border-blue-500/30 hover:border-blue-500/60'
+    accent: 'blue',
   },
   {
     title: 'Modern UI/UX Design System',
     category: 'Product Design',
     duration: '40 Days',
     level: 'All Levels',
-    learners: '8.4k learners',
+    learners: '8.4k',
     icon: Sparkles,
-    accent: 'border-pink-500/30 hover:border-pink-500/60'
+    accent: 'pink',
   },
   {
     title: 'Cybersecurity Fundamentals',
     category: 'Security & Networks',
     duration: '60 Days',
     level: 'Intermediate',
-    learners: '6.7k learners',
+    learners: '6.7k',
     icon: ShieldCheck,
-    accent: 'border-emerald-500/30 hover:border-emerald-500/60'
+    accent: 'emerald',
   },
   {
     title: 'Cloud Architecture & DevOps',
     category: 'Infrastructure',
     duration: '60 Days',
     level: 'Intermediate',
-    learners: '7.3k learners',
-    icon: Compass,
-    accent: 'border-amber-500/30 hover:border-amber-500/60'
+    learners: '7.3k',
+    icon: Globe,
+    accent: 'amber',
   },
 ];
+
+const ACCENT_MAP: Record<string, { border: string; hoverBorder: string; iconBg: string; iconText: string; tag: string }> = {
+  violet: { border: 'border-violet-500/25', hoverBorder: 'hover:border-violet-500/60', iconBg: 'bg-violet-500/15', iconText: 'text-violet-400', tag: 'bg-violet-500/10 text-violet-300 border-violet-500/20' },
+  indigo: { border: 'border-indigo-500/25', hoverBorder: 'hover:border-indigo-500/60', iconBg: 'bg-indigo-500/15', iconText: 'text-indigo-400', tag: 'bg-indigo-500/10 text-indigo-300 border-indigo-500/20' },
+  blue: { border: 'border-blue-500/25', hoverBorder: 'hover:border-blue-500/60', iconBg: 'bg-blue-500/15', iconText: 'text-blue-400', tag: 'bg-blue-500/10 text-blue-300 border-blue-500/20' },
+  pink: { border: 'border-pink-500/25', hoverBorder: 'hover:border-pink-500/60', iconBg: 'bg-pink-500/15', iconText: 'text-pink-400', tag: 'bg-pink-500/10 text-pink-300 border-pink-500/20' },
+  emerald: { border: 'border-emerald-500/25', hoverBorder: 'hover:border-emerald-500/60', iconBg: 'bg-emerald-500/15', iconText: 'text-emerald-400', tag: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20' },
+  amber: { border: 'border-amber-500/25', hoverBorder: 'hover:border-amber-500/60', iconBg: 'bg-amber-500/15', iconText: 'text-amber-400', tag: 'bg-amber-500/10 text-amber-300 border-amber-500/20' },
+};
 
 const FAQS = [
   {
     q: 'How does Skillora AI customize my learning path?',
-    a: 'Skillora assesses your specific goal, prior experience level, target timeline, and available hours per day. Using our AI roadmap algorithm, it structures high-yield modules, exercises, and quizzes calibrated to prevent overwhelm while accelerating comprehension.'
+    a: "Skillora assesses your specific goal, prior experience level, target timeline, and available daily hours. Using our AI roadmap engine, it structures high-yield modules, exercises, and quizzes calibrated to prevent overwhelm while accelerating comprehension.",
   },
   {
     q: 'What if I get stuck on a difficult concept or exercise?',
-    a: 'Every lesson features an intelligent AI Tutor side panel. It understands your exact lesson context and can simplify theories into real-world analogies, suggest code fixes, or quiz you on prerequisite knowledge until you feel confident.'
+    a: "Every lesson features an intelligent AI Tutor side panel. It understands your exact lesson context and can simplify theories into real-world analogies, suggest code fixes, or quiz you on prerequisite knowledge until you feel confident.",
   },
   {
     q: 'Can I regenerate or adapt my roadmap as I progress?',
-    a: 'Yes! Learning isn\'t linear. You can adjust your daily time goals, regenerate roadmaps with new requirements, or mark already-known topics as completed to fast-forward through familiar material.'
+    a: "Yes! Learning isn't linear. You can adjust your daily time goals, regenerate roadmaps with new requirements, or mark already-known topics as completed to fast-forward through familiar material.",
   },
   {
     q: 'Is Skillora AI suitable for absolute beginners?',
-    a: 'Absolutely. When selecting the "Beginner" level in onboarding, the platform breaks down foundational concepts into bite-sized explanations, accompanied by intuitive visuals and gentle starter practice.'
+    a: 'Absolutely. When selecting the "Beginner" level in onboarding, the platform breaks down foundational concepts into bite-sized explanations, accompanied by intuitive examples and gentle starter practice.',
   },
   {
     q: 'How does the gamification and streak system work?',
-    a: 'You earn XP for reading lessons and passing quiz checkpoints. Daily streaks record your active study days, rewarding consistent dedication without overwhelming you.'
+    a: 'You earn XP for reading lessons and passing quiz checkpoints. Daily streaks record your active study days, rewarding consistent dedication without overwhelming you with pressure.',
   },
 ];
 
+const STATS = [
+  { value: 50, suffix: 'k+', label: 'Active Learners', color: 'text-white' },
+  { value: 200, suffix: '+', label: 'Curated Paths', color: 'text-white' },
+  { value: 98, suffix: '%', label: 'Goal Success', color: 'text-violet-400' },
+];
+
+/* ─── Mockup Roadmap Steps ──────────────────────────────────────────────────── */
+const MOCK_STEPS = [
+  { title: 'HTML5 Semantic Layouts & CSS Grid', time: '25 min', status: 'done' },
+  { title: 'JavaScript Async Flow & Promises', time: '30 min', status: 'active' },
+  { title: 'State Management with React Hooks', time: '40 min', status: 'locked' },
+  { title: 'REST API Architecture with Express', time: '35 min', status: 'locked' },
+];
+
+/* ─── Fade-in variant ──────────────────────────────────────────────────────── */
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 24 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.55, delay, ease: [0.16, 1, 0.3, 1] },
+});
+
+const fadeUpView = (delay = 0) => ({
+  initial: { opacity: 0, y: 24 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: { duration: 0.55, delay, ease: [0.16, 1, 0.3, 1] },
+});
+
+/* ─── Section Header ─────────────────────────────────────────────────────────  */
+function SectionBadge({ color, children }: { color: string; children: React.ReactNode }) {
+  return (
+    <span className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold border mb-5 ${color}`}>
+      {children}
+    </span>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MAIN COMPONENT
+   ═══════════════════════════════════════════════════════════════════════════ */
 export default function LandingPage() {
   const navigate = useNavigate();
   const [goalInput, setGoalInput] = useState('');
-  const [activeGoalIndex, setActiveGoalIndex] = useState(0);
+  const [rotatingIdx, setRotatingIdx] = useState(0);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveGoalIndex((prev) => (prev + 1) % POPULAR_GOALS.length);
-    }, 3200);
-    return () => clearInterval(timer);
+    const t = setInterval(() => setRotatingIdx(i => (i + 1) % ROTATING_GOALS.length), 3000);
+    return () => clearInterval(t);
   }, []);
 
-  const handleStartWithGoal = (goalToUse?: string) => {
-    const selected = goalToUse || goalInput.trim();
-    if (selected) {
-      localStorage.setItem('skillora_goal_draft', selected);
-    }
+  const handleStart = (goal?: string) => {
+    const g = goal || goalInput.trim();
+    if (g) localStorage.setItem('skillora_goal_draft', g);
     navigate('/register');
   };
 
   return (
-    <div className="min-h-screen bg-[#07070b] text-slate-100 selection:bg-violet-600 selection:text-white">
+    <div className="min-h-screen bg-[#07070b] text-slate-100 overflow-x-hidden">
       <PublicNavbar />
 
-      {/* =========================================================================
-          HERO SECTION
-          ========================================================================= */}
-      <section className="relative pt-32 pb-24 md:pt-40 md:pb-36 overflow-hidden">
-        {/* Ambient Glows & Grid */}
-        <div className="absolute inset-0 grid-background opacity-40 pointer-events-none" />
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] hero-glow-1 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute top-1/3 right-10 w-[500px] h-[400px] hero-glow-2 rounded-full blur-[100px] pointer-events-none" />
+      {/* ══════════════════════════════════════════════════════
+          HERO
+          ══════════════════════════════════════════════════ */}
+      <section className="relative min-h-screen flex items-center pt-20 pb-16 overflow-hidden">
+        {/* Background effects */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Grid */}
+          <div
+            className="absolute inset-0 opacity-[0.035]"
+            style={{
+              backgroundImage: 'linear-gradient(to right,#fff 1px,transparent 1px),linear-gradient(to bottom,#fff 1px,transparent 1px)',
+              backgroundSize: '60px 60px',
+            }}
+          />
+          {/* Violet glow */}
+          <div
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[700px] rounded-full opacity-30"
+            style={{ background: 'radial-gradient(ellipse at center,rgba(124,58,237,.35) 0%,rgba(99,102,241,.08) 45%,transparent 75%)' }}
+          />
+          {/* Blue glow right */}
+          <div
+            className="absolute top-1/3 -right-40 w-[600px] h-[500px] rounded-full opacity-20"
+            style={{ background: 'radial-gradient(ellipse at center,rgba(59,130,246,.4) 0%,transparent 65%)' }}
+          />
+        </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-            {/* Left Content Column */}
-            <div className="lg:col-span-7 flex flex-col items-start text-left">
+        <div className="relative w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+          <div className="grid lg:grid-cols-2 gap-14 xl:gap-20 items-center">
+
+            {/* ── Left column ───────────────────────────────── */}
+            <div className="flex flex-col items-start">
+
               {/* Badge */}
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/25 backdrop-blur-md mb-6"
+              <motion.div {...fadeUp(0)}
+                className="inline-flex items-center gap-2 px-4 py-1.5 mb-7 rounded-full bg-violet-500/10 border border-violet-500/25 backdrop-blur-sm"
               >
-                <Sparkles className="w-4 h-4 text-violet-400" />
-                <span className="text-xs font-semibold text-violet-300">
-                  Next-Gen AI Learning Platform
-                </span>
+                <Sparkles className="w-3.5 h-3.5 text-violet-400" />
+                <span className="text-xs font-bold text-violet-300 tracking-wide">Next-Gen AI Learning Platform</span>
               </motion.div>
 
               {/* Headline */}
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.12] mb-6"
+              <motion.h1 {...fadeUp(0.08)}
+                className="text-[2.6rem] sm:text-5xl lg:text-[3.6rem] font-black leading-[1.08] tracking-tight mb-6 text-white"
               >
-                Stop Wondering <br />
+                Stop Wondering<br />
                 <span className="gradient-text-accent">What to Learn</span> Next.
               </motion.h1>
 
-              {/* Subheadline */}
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-base sm:text-lg text-slate-300 max-w-xl leading-relaxed mb-8"
+              {/* Sub */}
+              <motion.p {...fadeUp(0.16)}
+                className="text-base sm:text-lg text-slate-400 leading-relaxed max-w-lg mb-9"
               >
-                Your personal AI guide turns ambitious learning goals into step-by-step
+                Your personal AI guide turns ambitious learning goals into clear step-by-step
                 roadmaps, interactive lessons, smart practice quizzes, and visible progress.
               </motion.p>
 
-              {/* Goal Input Bar */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="w-full max-w-xl mb-4"
-              >
-                <div className="relative p-1.5 rounded-2xl bg-[#11111e]/90 border border-white/[0.12] focus-within:border-violet-500/60 focus-within:ring-4 focus-within:ring-violet-500/20 transition-all shadow-2xl flex flex-col sm:flex-row gap-2">
-                  <div className="flex-1 flex items-center px-3.5">
-                    <Target className="w-5 h-5 text-violet-400 shrink-0 mr-3" />
+              {/* Input bar */}
+              <motion.div {...fadeUp(0.22)} className="w-full max-w-lg mb-5">
+                <div className="flex flex-col sm:flex-row gap-2.5 p-2 rounded-2xl bg-[#10101c] border border-white/[0.1] focus-within:border-violet-500/50 focus-within:shadow-[0_0_0_4px_rgba(124,58,237,.12)] transition-all">
+                  <div className="flex-1 flex items-center gap-3 px-4 py-1.5">
+                    <Target className="w-4 h-4 text-violet-400 shrink-0" />
                     <input
                       type="text"
                       value={goalInput}
-                      onChange={(e) => setGoalInput(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleStartWithGoal()}
-                      placeholder={`e.g. Learn ${POPULAR_GOALS[activeGoalIndex]}...`}
-                      className="w-full bg-transparent text-sm text-white placeholder-slate-500 focus:outline-none py-2"
+                      onChange={e => setGoalInput(e.target.value)}
+                      onKeyDown={e => e.key === 'Enter' && handleStart()}
+                      placeholder={`e.g. Learn ${ROTATING_GOALS[rotatingIdx]}…`}
+                      className="w-full bg-transparent text-sm text-white placeholder-slate-500 focus:outline-none"
                     />
                   </div>
                   <button
-                    onClick={() => handleStartWithGoal()}
-                    className="btn-primary-glow px-6 py-3.5 rounded-xl text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer shrink-0"
+                    onClick={() => handleStart()}
+                    className="btn-primary-glow flex-shrink-0 px-6 py-3 rounded-xl text-white text-sm font-bold flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    Build My Path
-                    <ArrowRight className="w-4 h-4" />
+                    Build My Path <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
               </motion.div>
 
-              {/* Quick Prompt Chips */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="flex items-center flex-wrap gap-2 text-xs text-slate-400 mb-10"
-              >
-                <span className="font-semibold text-slate-400">Popular:</span>
-                {POPULAR_GOALS.slice(0, 3).map((goal) => (
+              {/* Popular chips */}
+              <motion.div {...fadeUp(0.28)} className="flex flex-wrap items-center gap-2 mb-12">
+                <span className="text-xs text-slate-500 font-semibold">Popular:</span>
+                {ROTATING_GOALS.slice(0, 3).map(g => (
                   <button
-                    key={goal}
-                    onClick={() => {
-                      setGoalInput(goal);
-                      handleStartWithGoal(goal);
-                    }}
-                    className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.08] hover:border-violet-500/40 hover:text-violet-300 text-slate-300 transition-all cursor-pointer"
+                    key={g}
+                    onClick={() => handleStart(g)}
+                    className="text-xs px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.07] text-slate-300 hover:text-violet-300 hover:border-violet-500/40 transition-all cursor-pointer"
                   >
-                    {goal}
+                    {g}
                   </button>
                 ))}
               </motion.div>
 
-              {/* Social Proof Stats */}
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
-                className="grid grid-cols-3 gap-6 sm:gap-10 pt-6 border-t border-white/[0.08] w-full max-w-lg"
+              {/* Stats */}
+              <motion.div {...fadeUp(0.34)}
+                className="grid grid-cols-3 gap-6 sm:gap-10 pt-8 border-t border-white/[0.07] w-full max-w-md"
               >
-                <div>
-                  <div className="text-2xl sm:text-3xl font-extrabold text-white">
-                    <AnimatedCounter target={50} suffix="k+" />
+                {STATS.map(s => (
+                  <div key={s.label}>
+                    <div className={`text-2xl sm:text-3xl font-extrabold ${s.color}`}>
+                      <AnimatedCounter target={s.value} suffix={s.suffix} />
+                    </div>
+                    <div className="text-[11px] text-slate-500 mt-0.5 font-medium">{s.label}</div>
                   </div>
-                  <div className="text-xs text-slate-400 mt-0.5 font-medium">Active Learners</div>
-                </div>
-                <div>
-                  <div className="text-2xl sm:text-3xl font-extrabold text-white">
-                    <AnimatedCounter target={200} suffix="+" />
-                  </div>
-                  <div className="text-xs text-slate-400 mt-0.5 font-medium">Curated Paths</div>
-                </div>
-                <div>
-                  <div className="text-2xl sm:text-3xl font-extrabold text-violet-400">
-                    <AnimatedCounter target={98} suffix="%" />
-                  </div>
-                  <div className="text-xs text-slate-400 mt-0.5 font-medium">Goal Success</div>
-                </div>
+                ))}
               </motion.div>
             </div>
 
-            {/* Right Column: Interactive App Preview Mockup */}
-            <div className="lg:col-span-5 relative">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.94, y: 30 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.2 }}
-                className="rounded-3xl p-1 bg-gradient-to-b from-white/[0.15] via-white/[0.05] to-transparent shadow-2xl"
-              >
-                <div className="bg-[#0e0e18] rounded-[22px] p-6 border border-white/[0.08]">
-                  {/* Browser Window Bar */}
-                  <div className="flex items-center justify-between pb-4 mb-5 border-b border-white/[0.08]">
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full bg-rose-500/80" />
-                      <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-                      <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+            {/* ── Right column: App mockup ───────────────────── */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.93, y: 30 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="hidden lg:block"
+            >
+              {/* Outer glow ring */}
+              <div className="rounded-3xl p-px bg-gradient-to-b from-violet-500/40 via-indigo-500/20 to-transparent shadow-2xl">
+                <div className="bg-[#0d0d18] rounded-[23px] p-6 border border-white/[0.06]">
+
+                  {/* Window bar */}
+                  <div className="flex items-center justify-between pb-4 mb-5 border-b border-white/[0.07]">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-2.5 h-2.5 rounded-full bg-rose-500/90" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-amber-500/90" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/90" />
                     </div>
-                    <span className="text-[11px] font-mono text-slate-400">skillora.ai/roadmap</span>
-                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                    <span className="text-[11px] font-mono text-slate-500">skillora.ai/roadmap</span>
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">
                       Live Engine
                     </span>
                   </div>
 
-                  {/* Header in Roadmap */}
+                  {/* Roadmap header */}
                   <div className="flex items-start justify-between mb-5">
                     <div>
                       <h4 className="text-sm font-bold text-white">Full Stack Web Development</h4>
-                      <p className="text-[11px] text-slate-400 mt-0.5">Phase 2: Modern JavaScript & APIs</p>
+                      <p className="text-[11px] text-slate-500 mt-0.5">Phase 2: Modern JavaScript & APIs</p>
                     </div>
                     <div className="text-right">
-                      <span className="text-xs font-bold text-violet-300">45% Completed</span>
-                      <div className="w-24 h-1.5 rounded-full bg-white/10 mt-1.5 overflow-hidden">
+                      <span className="text-xs font-bold text-violet-400">45% Completed</span>
+                      <div className="w-20 h-1.5 rounded-full bg-white/[0.08] mt-1.5 overflow-hidden">
                         <div className="w-[45%] h-full bg-gradient-to-r from-violet-500 to-indigo-500 rounded-full" />
                       </div>
                     </div>
                   </div>
 
-                  {/* Mock Steps */}
-                  <div className="space-y-2.5">
-                    {[
-                      { title: 'HTML5 Semantic Layouts & CSS Grid', time: '25 min', status: 'done' },
-                      { title: 'JavaScript Asynchronous Flow & Promises', time: '30 min', status: 'active' },
-                      { title: 'State Management with React & Hooks', time: '40 min', status: 'locked' },
-                      { title: 'REST API Architecture with Express', time: '35 min', status: 'locked' },
-                    ].map((step, idx) => (
+                  {/* Steps */}
+                  <div className="space-y-2.5 mb-5">
+                    {MOCK_STEPS.map((step, i) => (
                       <div
-                        key={idx}
-                        className={`flex items-center justify-between p-3.5 rounded-xl border transition-all ${
+                        key={i}
+                        className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
                           step.status === 'active'
-                            ? 'bg-violet-600/15 border-violet-500/40 shadow-lg shadow-violet-500/10'
+                            ? 'bg-violet-500/10 border-violet-500/35 shadow-lg shadow-violet-500/10'
                             : step.status === 'done'
-                            ? 'bg-emerald-500/5 border-emerald-500/20 text-slate-300'
-                            : 'bg-white/[0.02] border-white/[0.05] opacity-50'
+                            ? 'bg-emerald-500/[0.05] border-emerald-500/20'
+                            : 'bg-white/[0.02] border-white/[0.04] opacity-50'
                         }`}
                       >
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2.5">
                           {step.status === 'done' ? (
                             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                           ) : step.status === 'active' ? (
                             <PlayCircle className="w-4 h-4 text-violet-400 shrink-0 animate-pulse" />
                           ) : (
-                            <div className="w-4 h-4 rounded-full border border-slate-600 shrink-0" />
+                            <Lock className="w-3.5 h-3.5 text-slate-600 shrink-0" />
                           )}
-                          <span className={`text-xs font-medium ${step.status === 'active' ? 'text-white font-semibold' : 'text-slate-300'}`}>
+                          <span className={`text-xs font-medium ${step.status === 'active' ? 'text-white font-semibold' : 'text-slate-400'}`}>
                             {step.title}
                           </span>
                         </div>
-                        <span className="text-[10px] text-slate-400 font-mono shrink-0 ml-2">
-                          {step.time}
-                        </span>
+                        <span className="text-[10px] font-mono text-slate-500 ml-3 shrink-0">{step.time}</span>
                       </div>
                     ))}
                   </div>
 
-                  {/* AI Tutor Card Inside Mockup */}
-                  <div className="mt-4 p-3.5 rounded-xl bg-gradient-to-br from-[#161628] to-[#12121f] border border-violet-500/20 flex items-start gap-3">
+                  {/* AI Tutor bubble */}
+                  <div className="p-3.5 rounded-xl bg-gradient-to-br from-[#15152a] to-[#111120] border border-violet-500/20 flex items-start gap-3">
                     <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center shrink-0">
                       <Brain className="w-3.5 h-3.5 text-white" />
                     </div>
-                    <div className="flex-1 text-[11px] text-slate-300 leading-relaxed">
-                      <span className="font-bold text-violet-300">Skillora AI Tutor:</span> "Notice how Async/Await eliminates callback nesting. Ready for the practice challenge?"
-                    </div>
+                    <p className="text-[11px] text-slate-300 leading-relaxed">
+                      <span className="font-bold text-violet-300">Skillora Tutor: </span>
+                      "Notice how Async/Await eliminates callback nesting. Ready for the practice challenge?"
+                    </p>
                   </div>
 
-                  {/* Bottom Stats */}
-                  <div className="mt-4 pt-3.5 border-t border-white/[0.06] flex items-center justify-between text-[11px]">
-                    <span className="text-amber-300 font-semibold flex items-center gap-1">
-                      <Zap className="w-3.5 h-3.5 text-amber-400 fill-amber-400" /> +350 XP Gained
+                  {/* XP + streak */}
+                  <div className="mt-4 pt-3.5 border-t border-white/[0.05] flex items-center justify-between text-[11px]">
+                    <span className="flex items-center gap-1.5 font-semibold text-amber-300">
+                      <Zap className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                      +350 XP Gained
                     </span>
-                    <span className="text-orange-300 font-semibold flex items-center gap-1">
-                      <Flame className="w-3.5 h-3.5 text-orange-400 fill-orange-400" /> 6 Days Streak
+                    <span className="flex items-center gap-1.5 font-semibold text-orange-300">
+                      <Flame className="w-3.5 h-3.5 fill-orange-400 text-orange-400" />
+                      6 Days Streak
                     </span>
                   </div>
                 </div>
-              </motion.div>
-            </div>
+              </div>
+            </motion.div>
+
           </div>
         </div>
       </section>
 
-      {/* =========================================================================
-          SECTION 2: HOW IT WORKS
-          ========================================================================= */}
-      <section id="how-it-works" className="py-24 md:py-32 relative border-t border-white/[0.06] bg-[#090910]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-semibold mb-4">
-              Simple 3-Step Process
+      {/* ══════════════════════════════════════════════════════
+          TRUST BAR
+          ══════════════════════════════════════════════════ */}
+      <div className="border-y border-white/[0.06] bg-[#090910] py-5">
+        <div className="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-10 text-center">
+          {[
+            { icon: Star, text: '4.9/5 Average Rating', color: 'text-amber-400' },
+            { icon: Users, text: '50,000+ Active Learners', color: 'text-violet-400' },
+            { icon: ShieldCheck, text: 'No Credit Card Required', color: 'text-emerald-400' },
+            { icon: Zap, text: 'AI Roadmap in 30 Seconds', color: 'text-blue-400' },
+          ].map(({ icon: Icon, text, color }) => (
+            <div key={text} className="flex items-center gap-2 text-xs font-semibold text-slate-400">
+              <Icon className={`w-4 h-4 ${color}`} />
+              {text}
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-4">
+          ))}
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════
+          HOW IT WORKS
+          ══════════════════════════════════════════════════ */}
+      <section id="how-it-works" className="py-28 md:py-36 relative border-b border-white/[0.06] bg-[#090910]">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+
+          <div className="text-center mb-20">
+            <motion.div {...fadeUpView(0)}>
+              <SectionBadge color="bg-blue-500/10 text-blue-300 border-blue-500/20">
+                Simple 3-Step Process
+              </SectionBadge>
+            </motion.div>
+            <motion.h2 {...fadeUpView(0.07)}
+              className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-4"
+            >
               How Skillora AI <span className="gradient-text-accent">Guides You</span>
-            </h2>
-            <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
+            </motion.h2>
+            <motion.p {...fadeUpView(0.12)} className="text-sm sm:text-base text-slate-500 max-w-lg mx-auto">
               No more doom-scrolling tutorial hell. Convert your ambition into clear daily habits.
-            </p>
+            </motion.p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {STEPS.map((s, idx) => {
+          <div className="grid md:grid-cols-3 gap-7">
+            {HOW_IT_WORKS.map((s, idx) => {
               const Icon = s.icon;
               return (
                 <motion.div
                   key={s.step}
-                  initial={{ opacity: 0, y: 25 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: idx * 0.15 }}
-                  className="relative p-8 rounded-3xl bg-[#0f0f1b] border border-white/[0.08] hover:border-violet-500/40 transition-all duration-300 group hover:-translate-y-1.5 shadow-xl"
+                  {...fadeUpView(idx * 0.12)}
+                  className="relative p-8 rounded-3xl bg-[#0e0e1a] border border-white/[0.07] hover:border-violet-500/35 hover:-translate-y-1.5 transition-all duration-300 group overflow-hidden"
                 >
-                  {/* Step Number Indicator */}
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-violet-500/25">
-                      <Icon className="w-6 h-6" />
-                    </div>
-                    <span className="text-3xl font-black text-white/10 group-hover:text-violet-400/30 transition-colors">
-                      {s.step}
-                    </span>
+                  {/* Step number watermark */}
+                  <span className="absolute top-5 right-6 text-6xl font-black text-white/[0.04] group-hover:text-violet-500/[0.08] transition-colors select-none">
+                    {s.step}
+                  </span>
+
+                  <div className={`w-12 h-12 rounded-2xl bg-gradient-to-tr ${s.gradient} flex items-center justify-center text-white mb-6 shadow-lg ${s.glow}`}>
+                    <Icon className="w-6 h-6" />
                   </div>
 
-                  <span className="text-[11px] font-bold text-violet-400 uppercase tracking-wider block mb-2">
-                    {s.badge}
+                  <span className="text-[10px] font-extrabold text-violet-400 uppercase tracking-widest block mb-2">
+                    Step {s.step} · {s.badge}
                   </span>
-                  <h3 className="text-lg font-bold text-white mb-3 tracking-tight">
-                    {s.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                    {s.desc}
-                  </p>
+                  <h3 className="text-lg font-bold text-white tracking-tight mb-3">{s.title}</h3>
+                  <p className="text-sm text-slate-500 leading-relaxed">{s.desc}</p>
                 </motion.div>
               );
             })}
@@ -482,21 +535,26 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* =========================================================================
-          SECTION 3: PLATFORM FEATURES
-          ========================================================================= */}
-      <section id="features" className="py-24 md:py-32 relative border-t border-white/[0.06]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-xs font-semibold mb-4">
-              Comprehensive Toolkit
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-4">
+      {/* ══════════════════════════════════════════════════════
+          FEATURES GRID
+          ══════════════════════════════════════════════════ */}
+      <section id="features" className="py-28 md:py-36 relative border-b border-white/[0.06]">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+
+          <div className="text-center mb-20">
+            <motion.div {...fadeUpView(0)}>
+              <SectionBadge color="bg-violet-500/10 text-violet-300 border-violet-500/20">
+                <Sparkles className="w-3.5 h-3.5" /> Comprehensive Toolkit
+              </SectionBadge>
+            </motion.div>
+            <motion.h2 {...fadeUpView(0.07)}
+              className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-4"
+            >
               Engineered for <span className="gradient-text-accent">Deep Learning</span>
-            </h2>
-            <p className="text-sm sm:text-base text-slate-400">
+            </motion.h2>
+            <motion.p {...fadeUpView(0.12)} className="text-sm sm:text-base text-slate-500 max-w-lg mx-auto">
               Everything you need to transform from beginner curiosity to professional mastery.
-            </p>
+            </motion.p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -505,21 +563,14 @@ export default function LandingPage() {
               return (
                 <motion.div
                   key={f.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: idx * 0.08 }}
-                  className="p-7 rounded-3xl bg-[#0d0d17] border border-white/[0.08] hover:border-violet-500/30 hover:bg-[#11111f] transition-all duration-300 group hover:-translate-y-1 shadow-md"
+                  {...fadeUpView(idx * 0.07)}
+                  className={`p-7 rounded-3xl bg-[#0d0d18] border ${f.border} ${f.hoverBorder} hover:bg-[#10101e] hover:-translate-y-1 transition-all duration-300 group`}
                 >
                   <div className={`w-11 h-11 rounded-2xl ${f.bg} border ${f.border} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
                     <Icon className={`w-5 h-5 ${f.color}`} />
                   </div>
-                  <h3 className="text-base font-bold text-white mb-2 tracking-tight">
-                    {f.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                    {f.desc}
-                  </p>
+                  <h3 className="text-base font-bold text-white mb-2.5 tracking-tight">{f.title}</h3>
+                  <p className="text-sm text-slate-500 leading-relaxed">{f.desc}</p>
                 </motion.div>
               );
             })}
@@ -527,67 +578,69 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* =========================================================================
-          SECTION 4: POPULAR LEARNING PATHS
-          ========================================================================= */}
-      <section id="paths" className="py-24 md:py-32 relative border-t border-white/[0.06] bg-[#090910]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* ══════════════════════════════════════════════════════
+          POPULAR LEARNING PATHS
+          ══════════════════════════════════════════════════ */}
+      <section id="paths" className="py-28 md:py-36 relative border-b border-white/[0.06] bg-[#090910]">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
             <div>
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-semibold mb-4">
-                Pre-Tested Curricula
-              </div>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white">
+              <motion.div {...fadeUpView(0)}>
+                <SectionBadge color="bg-emerald-500/10 text-emerald-300 border-emerald-500/20">
+                  Pre-Tested Curricula
+                </SectionBadge>
+              </motion.div>
+              <motion.h2 {...fadeUpView(0.07)}
+                className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white"
+              >
                 Popular Learning <span className="gradient-text-accent">Tracks</span>
-              </h2>
+              </motion.h2>
             </div>
-            <button
+            <motion.button
+              {...fadeUpView(0.1)}
               onClick={() => navigate('/register')}
-              className="text-xs font-bold text-violet-400 hover:text-violet-300 flex items-center gap-1.5 self-start md:self-auto cursor-pointer"
+              className="text-xs font-bold text-violet-400 hover:text-violet-300 flex items-center gap-1.5 cursor-pointer"
             >
               Browse All Topics <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+            </motion.button>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {POPULAR_PATHS.map((path, idx) => {
               const Icon = path.icon;
+              const ac = ACCENT_MAP[path.accent];
               return (
                 <motion.div
                   key={path.title}
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: idx * 0.08 }}
-                  onClick={() => handleStartWithGoal(path.title)}
-                  className={`p-6 rounded-3xl bg-[#0f0f1b] border ${path.accent} cursor-pointer group hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between shadow-xl`}
+                  {...fadeUpView(idx * 0.07)}
+                  onClick={() => handleStart(path.title)}
+                  className={`p-6 rounded-3xl bg-[#0e0e1a] border ${ac.border} ${ac.hoverBorder} cursor-pointer hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group`}
                 >
                   <div>
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
+                      <span className={`text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-md border ${ac.tag}`}>
                         {path.category}
                       </span>
-                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-white/[0.06] text-slate-300">
-                        {path.level}
-                      </span>
+                      <span className="text-[10px] font-semibold text-slate-500">{path.level}</span>
                     </div>
 
-                    <div className="flex items-start gap-3.5 mb-4">
-                      <div className="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400 shrink-0 group-hover:scale-105 transition-transform">
-                        <Icon className="w-5 h-5" />
+                    <div className="flex items-start gap-3.5 mb-5">
+                      <div className={`w-10 h-10 rounded-xl ${ac.iconBg} flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform`}>
+                        <Icon className={`w-5 h-5 ${ac.iconText}`} />
                       </div>
-                      <h3 className="text-base font-bold text-white group-hover:text-violet-300 transition-colors">
+                      <h3 className="text-base font-bold text-white leading-snug group-hover:text-violet-200 transition-colors">
                         {path.title}
                       </h3>
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between text-xs text-slate-400">
+                  <div className="pt-4 border-t border-white/[0.05] flex items-center justify-between text-xs text-slate-500">
                     <span className="flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-slate-400" /> {path.duration}
+                      <Clock className="w-3.5 h-3.5" /> {path.duration}
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <Users className="w-3.5 h-3.5 text-slate-400" /> {path.learners}
+                      <Users className="w-3.5 h-3.5" /> {path.learners} learners
                     </span>
                   </div>
                 </motion.div>
@@ -597,89 +650,110 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* =========================================================================
-          SECTION 5: AI TUTOR SHOWCASE
-          ========================================================================= */}
-      <section id="tutor" className="py-24 md:py-32 relative border-t border-white/[0.06]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-12 gap-12 items-center">
-            {/* Left Narrative */}
-            <div className="lg:col-span-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-semibold mb-4">
-                Contextual Intelligence
-              </div>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-6">
-                Meet Your 24/7 <br />
+      {/* ══════════════════════════════════════════════════════
+          AI TUTOR SHOWCASE
+          ══════════════════════════════════════════════════ */}
+      <section id="tutor" className="py-28 md:py-36 relative border-b border-white/[0.06]">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+
+            {/* Left narrative */}
+            <div>
+              <motion.div {...fadeUpView(0)}>
+                <SectionBadge color="bg-cyan-500/10 text-cyan-300 border-cyan-500/20">
+                  Contextual Intelligence
+                </SectionBadge>
+              </motion.div>
+              <motion.h2 {...fadeUpView(0.07)}
+                className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-6"
+              >
+                Meet Your 24/7<br />
                 <span className="gradient-text-accent">AI Learning Partner</span>
-              </h2>
-              <p className="text-sm sm:text-base text-slate-300 leading-relaxed mb-8">
+              </motion.h2>
+              <motion.p {...fadeUpView(0.12)} className="text-sm sm:text-base text-slate-400 leading-relaxed mb-8">
                 Whenever a lesson feels abstract or a quiz question confuses you, the AI Tutor
                 is right beside you with tailored explanations, real-world metaphors, and step-by-step guidance.
-              </p>
+              </motion.p>
 
-              <div className="space-y-4">
+              <motion.div {...fadeUpView(0.16)} className="space-y-4">
                 {[
-                  'Explains complex theories at your current level of experience',
+                  'Explains complex theories at your current experience level',
                   'Gives practical, production-ready code examples instantly',
                   'Offers progressive hints instead of spoiling answers',
-                  'Suggests targeted revision whenever you struggle with a topic'
+                  'Suggests targeted revision whenever you struggle with a topic',
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-3">
                     <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                    <span className="text-xs sm:text-sm text-slate-300 font-medium">{item}</span>
+                    <span className="text-sm text-slate-300 font-medium">{item}</span>
                   </div>
                 ))}
-              </div>
+              </motion.div>
+
+              <motion.button
+                {...fadeUpView(0.22)}
+                onClick={() => navigate('/register')}
+                className="mt-10 btn-primary-glow px-7 py-3.5 rounded-xl text-white text-sm font-bold flex items-center gap-2 cursor-pointer w-fit"
+              >
+                Try AI Tutor Free <ArrowRight className="w-4 h-4" />
+              </motion.button>
             </div>
 
-            {/* Right Chat UI Simulation */}
-            <div className="lg:col-span-6">
-              <div className="rounded-3xl p-1 bg-gradient-to-br from-violet-500/30 via-white/[0.08] to-transparent shadow-2xl">
-                <div className="bg-[#0c0c16] rounded-[22px] p-6 border border-white/[0.08]">
-                  {/* Tutor Header */}
-                  <div className="flex items-center justify-between pb-4 mb-4 border-b border-white/[0.08]">
+            {/* Right: Chat UI */}
+            <motion.div {...fadeUpView(0.1)}>
+              <div className="rounded-3xl p-px bg-gradient-to-br from-violet-500/40 via-indigo-500/20 to-transparent shadow-2xl">
+                <div className="bg-[#0b0b16] rounded-[23px] p-6 border border-white/[0.06]">
+
+                  {/* Tutor header */}
+                  <div className="flex items-center justify-between pb-4 mb-5 border-b border-white/[0.06]">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center text-white">
-                        <Brain className="w-4 h-4" />
+                      <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center">
+                        <Brain className="w-4.5 h-4.5 text-white" style={{ width: 18, height: 18 }} />
                       </div>
                       <div>
-                        <h4 className="text-xs font-bold text-white">Skillora Tutor</h4>
-                        <span className="text-[10px] text-emerald-400 font-medium flex items-center gap-1">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Active in Current Lesson
+                        <p className="text-xs font-bold text-white">Skillora AI Tutor</p>
+                        <span className="text-[10px] text-emerald-400 font-medium flex items-center gap-1 mt-0.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
+                          Active in Current Lesson
                         </span>
                       </div>
                     </div>
+                    <span className="text-[10px] px-2 py-1 rounded-lg bg-white/[0.04] border border-white/[0.06] text-slate-400 font-mono">
+                      useEffect
+                    </span>
                   </div>
 
-                  {/* Messages */}
-                  <div className="space-y-3.5 mb-4 text-xs">
+                  {/* Chat messages */}
+                  <div className="space-y-4 mb-5 text-xs">
+                    {/* User */}
                     <div className="flex justify-end">
-                      <div className="bg-violet-600/25 border border-violet-500/40 text-slate-100 rounded-2xl rounded-tr-sm px-4 py-3 max-w-[85%] leading-relaxed">
-                        I still don't quite understand why we use useEffect dependencies in React?
+                      <div className="bg-violet-600/20 border border-violet-500/30 text-slate-100 rounded-2xl rounded-tr-sm px-4 py-3 max-w-[85%] leading-relaxed">
+                        I still don't understand why we use useEffect dependencies in React?
                       </div>
                     </div>
-
+                    {/* Tutor */}
                     <div className="flex items-start gap-2.5">
-                      <div className="w-6 h-6 rounded-lg bg-violet-600/30 flex items-center justify-center shrink-0 mt-1">
+                      <div className="w-6 h-6 rounded-lg bg-violet-600/25 border border-violet-500/20 flex items-center justify-center shrink-0 mt-1">
                         <Brain className="w-3.5 h-3.5 text-violet-400" />
                       </div>
-                      <div className="bg-[#141424] border border-white/[0.08] text-slate-200 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[85%] leading-relaxed space-y-2">
-                        <p>
-                          Think of dependencies like an <strong className="text-white">alert trigger 🔔</strong>.
-                        </p>
-                        <p className="text-slate-300">
-                          If the dependency list is empty <code className="text-violet-300 bg-white/5 px-1 py-0.5 rounded">[]</code>, the effect runs only once when the component is mounted. If you put <code className="text-violet-300 bg-white/5 px-1 py-0.5 rounded">[userId]</code>, it re-runs only when the <code className="text-violet-300">userId</code> changes!
+                      <div className="bg-[#141424] border border-white/[0.07] text-slate-200 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[88%] leading-relaxed space-y-2">
+                        <p>Think of it like an <strong className="text-white">alarm trigger 🔔</strong></p>
+                        <p className="text-slate-400">
+                          An empty{' '}
+                          <code className="text-violet-300 bg-violet-500/10 px-1.5 py-0.5 rounded text-[11px]">[]</code>{' '}
+                          runs once on mount. Adding{' '}
+                          <code className="text-violet-300 bg-violet-500/10 px-1.5 py-0.5 rounded text-[11px]">[userId]</code>{' '}
+                          re-runs the effect only when <code className="text-violet-300 text-[11px]">userId</code> changes!
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  {/* Quick Pill Prompts */}
-                  <div className="flex flex-wrap gap-2 pt-2 border-t border-white/[0.06]">
-                    {['Show a code example', 'Give me a practice quiz', 'Explain with an analogy'].map((p) => (
+                  {/* Quick prompts */}
+                  <div className="flex flex-wrap gap-2 pt-3 border-t border-white/[0.05]">
+                    {['Show a code example', 'Give me a practice quiz', 'Explain with an analogy'].map(p => (
                       <span
                         key={p}
-                        className="text-[11px] px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-slate-300 hover:text-white hover:border-violet-500/40 cursor-pointer transition-all"
+                        className="text-[11px] px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.07] text-slate-400 hover:text-violet-300 hover:border-violet-500/35 cursor-pointer transition-all"
                       >
                         {p}
                       </span>
@@ -687,44 +761,47 @@ export default function LandingPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
+
           </div>
         </div>
       </section>
 
-      {/* =========================================================================
-          SECTION 6: FAQ ACCORDION
-          ========================================================================= */}
-      <section id="faq" className="py-24 md:py-32 relative border-t border-white/[0.06] bg-[#090910]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* ══════════════════════════════════════════════════════
+          FAQ
+          ══════════════════════════════════════════════════ */}
+      <section id="faq" className="py-28 md:py-36 relative border-b border-white/[0.06] bg-[#090910]">
+        <div className="max-w-3xl mx-auto px-5 sm:px-8">
+
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-semibold mb-4">
-              Got Questions?
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-4">
+            <motion.div {...fadeUpView(0)}>
+              <SectionBadge color="bg-amber-500/10 text-amber-300 border-amber-500/20">
+                Got Questions?
+              </SectionBadge>
+            </motion.div>
+            <motion.h2 {...fadeUpView(0.07)}
+              className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-4"
+            >
               Frequently Asked <span className="gradient-text-accent">Questions</span>
-            </h2>
+            </motion.h2>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             {FAQS.map((faq, idx) => {
               const isOpen = openFaq === idx;
               return (
-                <div
+                <motion.div
                   key={idx}
-                  className="rounded-2xl border border-white/[0.08] bg-[#0e0e18] overflow-hidden transition-all"
+                  {...fadeUpView(idx * 0.06)}
+                  className={`rounded-2xl border ${isOpen ? 'border-violet-500/30 bg-[#0f0f1c]' : 'border-white/[0.07] bg-[#0c0c16]'} overflow-hidden transition-all`}
                 >
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : idx)}
-                    className="w-full flex items-center justify-between p-6 text-left hover:bg-white/[0.02] transition-colors cursor-pointer"
+                    className="w-full flex items-center justify-between px-6 py-5 text-left hover:bg-white/[0.02] transition-colors cursor-pointer"
                   >
-                    <span className="text-sm sm:text-base font-bold text-white pr-4">
-                      {faq.q}
-                    </span>
+                    <span className="text-sm font-bold text-white pr-4 leading-snug">{faq.q}</span>
                     <ChevronDown
-                      className={`w-5 h-5 text-slate-400 shrink-0 transition-transform duration-300 ${
-                        isOpen ? 'rotate-180 text-violet-400' : ''
-                      }`}
+                      className={`w-5 h-5 shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180 text-violet-400' : 'text-slate-500'}`}
                     />
                   </button>
                   <AnimatePresence>
@@ -736,80 +813,100 @@ export default function LandingPage() {
                         transition={{ duration: 0.25 }}
                         className="overflow-hidden"
                       >
-                        <p className="px-6 pb-6 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-white/[0.04] pt-4">
+                        <p className="px-6 pb-6 text-sm text-slate-400 leading-relaxed border-t border-white/[0.04] pt-4">
                           {faq.a}
                         </p>
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </div>
+                </motion.div>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* =========================================================================
-          SECTION 7: GRAND CALL TO ACTION
-          ========================================================================= */}
-      <section className="py-24 md:py-36 relative overflow-hidden">
-        <div className="absolute inset-0 hero-glow-1 opacity-70 pointer-events-none" />
+      {/* ══════════════════════════════════════════════════════
+          FINAL CTA
+          ══════════════════════════════════════════════════ */}
+      <section className="py-28 md:py-36 relative overflow-hidden">
+        {/* Background glow */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse at 50% 60%,rgba(124,58,237,.18) 0%,rgba(99,102,241,.05) 45%,transparent 75%)' }}
+        />
 
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="rounded-3xl p-1 bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 shadow-2xl">
-            <div className="bg-[#0b0b14] rounded-[22px] px-8 py-16 sm:p-20 text-center relative overflow-hidden">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center mx-auto mb-8 shadow-xl shadow-violet-500/30">
-                <Sparkles className="w-8 h-8 text-white" />
-              </div>
+        <div className="relative max-w-5xl mx-auto px-5 sm:px-8">
+          <motion.div {...fadeUpView(0)}>
+            <div className="rounded-3xl p-px bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 shadow-2xl shadow-violet-500/20">
+              <div className="bg-[#0a0a14] rounded-[23px] px-8 py-16 sm:py-20 text-center relative overflow-hidden">
 
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight mb-6">
-                Ready to Master Anything, <br />
-                <span className="gradient-text-accent">One Step at a Time?</span>
-              </h2>
+                {/* Icon */}
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center mx-auto mb-8 shadow-xl shadow-violet-500/30">
+                  <Sparkles className="w-8 h-8 text-white" />
+                </div>
 
-              <p className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto leading-relaxed mb-10">
-                Join thousands of students and career switchers building personalized roadmaps with AI-guided learning.
-              </p>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight mb-5">
+                  Ready to Master Anything,<br />
+                  <span className="gradient-text-accent">One Step at a Time?</span>
+                </h2>
 
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <button
-                  onClick={() => navigate('/register')}
-                  className="w-full sm:w-auto btn-primary-glow px-8 py-4 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  Build My Learning Path
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => navigate('/login')}
-                  className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white/[0.05] border border-white/10 hover:bg-white/10 text-white font-semibold text-sm transition-all cursor-pointer"
-                >
-                  Sign In to Account
-                </button>
+                <p className="text-sm sm:text-base text-slate-400 max-w-lg mx-auto leading-relaxed mb-10">
+                  Join thousands of students and career switchers building personalized roadmaps with AI-guided learning.
+                </p>
+
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                  <button
+                    onClick={() => navigate('/register')}
+                    className="w-full sm:w-auto btn-primary-glow px-8 py-4 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    Build My Learning Path <ArrowRight className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => navigate('/login')}
+                    className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white/[0.05] border border-white/[0.1] hover:bg-white/[0.09] text-white font-semibold text-sm transition-all cursor-pointer"
+                  >
+                    Sign In to Account
+                  </button>
+                </div>
+
+                {/* Trust note */}
+                <p className="mt-8 text-xs text-slate-600">
+                  Free to start · No credit card required · Cancel anytime
+                </p>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* =========================================================================
+      {/* ══════════════════════════════════════════════════════
           FOOTER
-          ========================================================================= */}
-      <footer className="border-t border-white/[0.08] py-12 bg-[#050508]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+          ══════════════════════════════════════════════════ */}
+      <footer className="border-t border-white/[0.07] py-12 bg-[#050508]">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 flex flex-col sm:flex-row items-center justify-between gap-6">
+
+          {/* Brand */}
           <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center text-white text-xs font-bold">
-              S
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-white" />
             </div>
-            <span className="text-sm font-extrabold text-white tracking-tight">SKILLORA AI</span>
-            <span className="text-xs text-slate-400">© 2026. All rights reserved.</span>
+            <div>
+              <span className="text-white font-extrabold text-sm tracking-tight">SKILLORA AI</span>
+              <p className="text-[10px] text-slate-600 -mt-0.5">Learn Anything, One Step at a Time</p>
+            </div>
           </div>
 
-          <div className="flex items-center gap-6 text-xs text-slate-400">
-            <a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a>
-            <a href="#features" className="hover:text-white transition-colors">Features</a>
-            <a href="#paths" className="hover:text-white transition-colors">Roadmaps</a>
-            <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
+          {/* Links */}
+          <div className="flex items-center gap-6 text-xs text-slate-500">
+            {['Privacy Policy', 'Terms of Service', 'Contact Us'].map(l => (
+              <a key={l} href="#" className="hover:text-slate-300 transition-colors">{l}</a>
+            ))}
           </div>
+
+          <p className="text-xs text-slate-600">
+            © {new Date().getFullYear()} Skillora AI. All rights reserved.
+          </p>
         </div>
       </footer>
     </div>
