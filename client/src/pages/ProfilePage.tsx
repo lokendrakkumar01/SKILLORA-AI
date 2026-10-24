@@ -8,6 +8,7 @@ import { Input } from '../components/ui/Input';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { UserAvatar } from '../components/ui/UserAvatar';
+import { AchievementIcon } from '../components/ui/AchievementIcon';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 
@@ -150,7 +151,7 @@ export default function ProfilePage() {
             <div className="grid sm:grid-cols-2 gap-3">
               {achievements.map((ach: any) => (
                 <div key={ach._id} className="flex items-center gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-                  <span className="text-2xl">{ach.icon}</span>
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-violet-500/10 text-violet-300"><AchievementIcon type={ach.type} /></span>
                   <div className="flex-1">
                     <div className="text-sm font-semibold text-white">{ach.title}</div>
                     <div className="text-xs text-slate-400">{ach.description}</div>

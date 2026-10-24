@@ -12,6 +12,7 @@ import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { ProgressRing } from '../components/ui/ProgressRing';
 import { AnimatedCounter } from '../components/ui/AnimatedCounter';
+import { AchievementIcon } from '../components/ui/AchievementIcon';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -218,7 +219,7 @@ export default function DashboardPage() {
                 <div className="space-y-2">
                   {overview.achievements.map((ach: any) => (
                     <div key={ach._id} className="flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-                      <span className="text-xl">{ach.icon}</span>
+                      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-violet-500/10 text-violet-300"><AchievementIcon type={ach.type} className="h-4 w-4" /></span>
                       <div className="flex-1 min-w-0">
                         <div className="text-xs font-semibold text-white">{ach.title}</div>
                         <div className="text-[10px] text-slate-400">{ach.description}</div>

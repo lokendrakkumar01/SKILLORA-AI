@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Target, ChevronRight, ChevronLeft, Zap, Clock, BookOpen, Code, Layers, Briefcase } from 'lucide-react';
+import { Target, ChevronRight, ChevronLeft, Zap, Clock, BookOpen, Code, Layers, Briefcase, Sprout, Flame, Check } from 'lucide-react';
 import { roadmapsApi } from '../api/roadmaps';
 import { Button } from '../components/ui/Button';
 import toast from 'react-hot-toast';
@@ -9,9 +9,9 @@ import toast from 'react-hot-toast';
 const STEPS_CONFIG = ['Goal', 'Level', 'Schedule', 'Format', 'Outcome'];
 
 const LEVELS = [
-  { id: 'beginner', label: 'Beginner', desc: 'Little or no prior knowledge', icon: '🌱' },
-  { id: 'intermediate', label: 'Intermediate', desc: 'Some experience, ready to go deeper', icon: '🔥' },
-  { id: 'advanced', label: 'Advanced', desc: 'Strong foundation, want to master', icon: '⚡' },
+  { id: 'beginner', label: 'Beginner', desc: 'Little or no prior knowledge', icon: Sprout },
+  { id: 'intermediate', label: 'Intermediate', desc: 'Some experience, ready to go deeper', icon: Flame },
+  { id: 'advanced', label: 'Advanced', desc: 'Strong foundation, want to master', icon: Zap },
 ];
 
 const FORMATS = [
@@ -64,7 +64,7 @@ export default function OnboardingPage() {
     try {
       const res = await roadmapsApi.create(data);
       localStorage.removeItem('skillora_goal_draft');
-      toast.success('🎉 Your roadmap is ready!');
+      toast.success('Your roadmap is ready!');
       navigate(`/roadmap/${res.data.roadmap._id}`);
     } catch (err: any) {
       toast.error(err.response?.data?.error || 'Failed to generate roadmap');
@@ -103,7 +103,7 @@ export default function OnboardingPage() {
               <div className="flex flex-col items-center gap-1">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
                   i < step ? 'bg-emerald-500 text-white' : i === step ? 'bg-violet-600 text-white shadow-lg shadow-violet-500/30' : 'bg-white/5 text-slate-500'}`}>
-                  {i < step ? '✓' : i + 1}
+                  {i < step ? <Check className="h-4 w-4" /> : i + 1}
                 </div>
                 <span className={`text-[10px] hidden sm:block ${i === step ? 'text-violet-300' : 'text-slate-600'}`}>{label}</span>
               </div>
@@ -160,12 +160,12 @@ export default function OnboardingPage() {
                         whileHover={{ x: 4 }}
                         className={`w-full flex items-center gap-4 p-4 rounded-xl border text-left transition-all ${
                           data.level === lvl.id ? 'bg-violet-500/15 border-violet-500/40 shadow-sm' : 'bg-white/[0.02] border-white/[0.07] hover:border-violet-500/25'}`}>
-                        <span className="text-2xl">{lvl.icon}</span>
+                        <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl ${data.level === lvl.id ? 'bg-violet-500/15 text-violet-300' : 'bg-white/[.04] text-slate-400'}`}><lvl.icon className="h-5 w-5" /></span>
                         <div>
                           <div className="font-semibold text-white text-sm">{lvl.label}</div>
                           <div className="text-xs text-slate-400 mt-0.5">{lvl.desc}</div>
                         </div>
-                        {data.level === lvl.id && <div className="ml-auto w-5 h-5 rounded-full bg-violet-500 flex items-center justify-center text-white text-xs">✓</div>}
+                        {data.level === lvl.id && <div className="ml-auto grid h-5 w-5 place-items-center rounded-full bg-violet-500 text-white"><Check className="h-3 w-3" /></div>}
                       </motion.button>
                     ))}
                   </div>
@@ -217,7 +217,7 @@ export default function OnboardingPage() {
                           <f.icon className="w-4 h-4" />
                         </div>
                         <span className="font-medium text-sm text-white">{f.label}</span>
-                        {data.preferredFormat === f.id && <div className="ml-auto w-5 h-5 rounded-full bg-violet-500 flex items-center justify-center text-white text-xs">✓</div>}
+                        {data.preferredFormat === f.id && <div className="ml-auto grid h-5 w-5 place-items-center rounded-full bg-violet-500 text-white"><Check className="h-3 w-3" /></div>}
                       </motion.button>
                     ))}
                   </div>
@@ -241,7 +241,7 @@ export default function OnboardingPage() {
                     <div className="space-y-1">
                       {['Structured phases and modules for your goal', `${data.targetDays}-day timeline with daily ${data.dailyMinutes}-min sessions`, `${data.level} level content with interactive lessons`, 'AI tutor support and quiz assessments'].map((item) => (
                         <div key={item} className="flex items-center gap-2 text-xs text-slate-300">
-                          <span className="text-violet-400">✓</span>{item}
+                          <Check className="h-3.5 w-3.5 shrink-0 text-violet-400" />{item}
                         </div>
                       ))}
                     </div>

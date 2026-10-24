@@ -50,9 +50,9 @@ export default function LessonPage() {
     setCompleting(true);
     try {
       const res = await lessonsApi.complete(stepId, { roadmapId });
-      toast.success(`✅ Lesson complete! +${res.data.xpEarned} XP`);
+      toast.success(`Lesson complete! +${res.data.xpEarned} XP`);
       if (res.data.newAchievements?.length) {
-        res.data.newAchievements.forEach((a: string) => toast.success(`🏆 Achievement: ${a}!`));
+        res.data.newAchievements.forEach((a: string) => toast.success(`Achievement unlocked: ${a}!`));
       }
       navigate(`/roadmap/${roadmapId}`);
     } catch (err: any) {
@@ -186,7 +186,7 @@ export default function LessonPage() {
                 Complete Lesson & Earn XP
               </Button>
             ) : (
-              <Badge variant="green" size="md">✅ Lesson Completed</Badge>
+              <Badge variant="green" size="md" icon={<CheckCircle2 className="h-3 w-3" />}>Lesson Completed</Badge>
             )}
           </motion.div>
 

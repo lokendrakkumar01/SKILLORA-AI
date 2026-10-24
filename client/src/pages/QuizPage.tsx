@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, XCircle, ArrowRight, ArrowLeft, Trophy, RotateCcw, Brain, Zap } from 'lucide-react';
+import { CheckCircle2, XCircle, ArrowRight, ArrowLeft, Trophy, RotateCcw, Brain, Zap, BookOpen, Lightbulb } from 'lucide-react';
 import { roadmapsApi, quizzesApi } from '../api/roadmaps';
 import { ProtectedLayout } from '../components/layout/AppLayout';
 import { Button } from '../components/ui/Button';
@@ -69,7 +69,7 @@ export default function QuizPage() {
       const res = await quizzesApi.submit(stepId!, { roadmapId: roadmapId!, answers: answers as number[] });
       setResult(res.data);
       setShowResult(true);
-      if (res.data.xpEarned > 0) toast.success(`🎉 +${res.data.xpEarned} XP earned!`);
+      if (res.data.xpEarned > 0) toast.success(`+${res.data.xpEarned} XP earned!`);
     } catch (err: any) {
       toast.error(err.response?.data?.error || 'Failed to submit quiz');
     } finally {
@@ -109,7 +109,7 @@ export default function QuizPage() {
               {passed ? <Trophy className="w-10 h-10 text-emerald-400" /> : <RotateCcw className="w-10 h-10 text-amber-400" />}
             </motion.div>
             <h2 className="text-3xl font-black text-white mb-2">
-              {passed ? '🎉 Quiz Passed!' : '📚 Keep Practicing!'}
+              <span className="inline-flex items-center justify-center gap-2">{passed ? <Trophy className="h-7 w-7 text-amber-300" /> : <BookOpen className="h-7 w-7 text-violet-300" />}{passed ? 'Quiz Passed!' : 'Keep Practicing!'}</span>
             </h2>
             <p className="text-slate-400 mb-6">
               {passed ? 'Excellent work! You nailed it.' : 'Review the lesson and try again.'}
@@ -224,8 +224,8 @@ export default function QuizPage() {
             {answered && q.explanation && (
               <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
                 className={`mt-5 p-4 rounded-xl border ${isCorrect ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-amber-500/20 bg-amber-500/5'}`}>
-                <p className={`text-xs font-semibold mb-1 ${isCorrect ? 'text-emerald-300' : 'text-amber-300'}`}>
-                  {isCorrect ? '✅ Correct!' : '💡 Explanation:'}
+                <p className={`flex items-center gap-1.5 text-xs font-semibold mb-1 ${isCorrect ? 'text-emerald-300' : 'text-amber-300'}`}>
+                  {isCorrect ? <CheckCircle2 className="h-3.5 w-3.5" /> : <Lightbulb className="h-3.5 w-3.5" />}{isCorrect ? 'Correct!' : 'Explanation:'}
                 </p>
                 <p className="text-xs text-slate-300">{q.explanation}</p>
               </motion.div>

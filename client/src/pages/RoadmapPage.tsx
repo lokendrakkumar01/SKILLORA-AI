@@ -103,7 +103,7 @@ export default function RoadmapPage() {
                       ? 'bg-emerald-500/20 text-emerald-400'
                       : 'bg-violet-500/15 text-violet-400'
                   }`}>
-                    {phaseDone === phaseTotal && phaseTotal > 0 ? '✓' : `P${pi + 1}`}
+                    {phaseDone === phaseTotal && phaseTotal > 0 ? <CheckCircle2 className="h-5 w-5" /> : `P${pi + 1}`}
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-bold text-white text-sm">{phase.title}</h3>

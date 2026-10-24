@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, Star, Zap, Flame, BookOpen, Brain, Map, Award } from 'lucide-react';
+import { Trophy, Zap } from 'lucide-react';
 import { profileApi } from '../api/roadmaps';
 import { ProtectedLayout } from '../components/layout/AppLayout';
 import { Badge } from '../components/ui/Badge';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
+import { AchievementIcon } from '../components/ui/AchievementIcon';
 
 const ALL_ACHIEVEMENTS = [
-  { type: 'first_lesson', title: 'First Step!', description: 'Complete your first lesson', icon: '🎯', xpBonus: 100 },
-  { type: 'streak_3', title: '3-Day Streak!', description: 'Study 3 days in a row', icon: '🔥', xpBonus: 150 },
-  { type: 'streak_7', title: 'Week Warrior!', description: 'Study 7 days in a row', icon: '⚡', xpBonus: 300 },
-  { type: 'quiz_master', title: 'Quiz Master!', description: 'Pass 5 quizzes with 80%+', icon: '🧠', xpBonus: 200 },
-  { type: 'roadmap_complete', title: 'Roadmap Explorer!', description: 'Complete a full roadmap', icon: '🗺️', xpBonus: 500 },
-  { type: 'lessons_10', title: 'Consistent Learner!', description: 'Complete 10 lessons', icon: '📚', xpBonus: 250 },
+  { type: 'first_lesson', title: 'First Step!', description: 'Complete your first lesson', xpBonus: 100 },
+  { type: 'streak_3', title: '3-Day Streak!', description: 'Study 3 days in a row', xpBonus: 150 },
+  { type: 'streak_7', title: 'Week Warrior!', description: 'Study 7 days in a row', xpBonus: 300 },
+  { type: 'quiz_master', title: 'Quiz Master!', description: 'Pass 5 quizzes with 80%+', xpBonus: 200 },
+  { type: 'roadmap_complete', title: 'Roadmap Explorer!', description: 'Complete a full roadmap', xpBonus: 500 },
+  { type: 'lessons_10', title: 'Consistent Learner!', description: 'Complete 10 lessons', xpBonus: 250 },
 ];
 
 export default function AchievementsPage() {
@@ -72,7 +73,9 @@ export default function AchievementsPage() {
                 }`}
               >
                 <div className="flex items-start gap-4">
-                  <div className={`text-3xl ${isEarned ? '' : 'grayscale opacity-40'}`}>{ach.icon}</div>
+                  <div className={`grid h-12 w-12 shrink-0 place-items-center rounded-xl ${isEarned ? 'bg-gradient-to-br from-violet-500/15 to-orange-500/10 text-violet-300' : 'bg-white/[.04] text-slate-600'}`}>
+                    <AchievementIcon type={ach.type} className={`h-6 w-6 ${isEarned ? '' : 'opacity-60'}`} />
+                  </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <h3 className={`text-sm font-bold ${isEarned ? 'text-white' : 'text-slate-500'}`}>{ach.title}</h3>
