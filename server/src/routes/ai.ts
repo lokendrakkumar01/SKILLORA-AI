@@ -45,8 +45,20 @@ router.post('/chat', auth, aiLimiter, async (req: AuthRequest, res: Response) =>
     }
     res.json({ response, isAI: true });
   } catch (err) {
-    console.error('AI tutor route error:', err);
-    res.status(500).json({ error: 'The AI tutor is temporarily unavailable. Please try again.' });
+    const providerError = err as { status?: number; code?: number | string; message?: string };
+    const details = providerError.message || '';
+    const statusCode = Number(providerError.status || providerError.code);
+    console.error('AI tutor route error:', statusCode || 'unknown status', details.slice(0, 500));
+    if (statusCode === 429 || /resource_exhausted|quota/i.test(details)) {
+      return res.status(503).json({ error: 'The AI service has reached its current usage limit. Please try again later.' });
+    }
+    if (statusCode === 401 || statusCode === 403 || /api key|permission denied/i.test(details)) {
+      return res.status(503).json({ error: 'The AI service credentials are not authorized. Please contact the site administrator.' });
+    }
+    if (/model.{0,40}(not found|not available|unsupported|does not exist)/i.test(details)) {
+      return res.status(503).json({ error: 'No available AI model is configured. Please check the server GEMINI_MODEL setting.' });
+    }
+    res.status(502).json({ error: 'The AI service could not complete this reply. Please retry in a moment.' });
   }
 });
 

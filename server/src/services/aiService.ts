@@ -148,7 +148,7 @@ export async function chatWithTutor(
   const client = getClient();
   if (!client) return null;
 
-  const systemInstruction = `You are SKILLORA AI Tutor, a patient and encouraging learning assistant. Give accurate, clear explanations at the learner's level. Use examples from their lesson when useful. Prefer concise answers, but explain enough for the learner to understand. Ask a short follow-up question when that would help them practice.
+  const systemInstruction = `You are SKILLORA AI Tutor, a patient and encouraging learning assistant. Give accurate, clear explanations at the learner's level. Reply in the same language the learner uses, including Hindi or Hinglish when appropriate. Use examples from their lesson when useful. Prefer concise answers, but explain enough for the learner to understand. Ask a short follow-up question when that would help them practice.
 
 Learning goal: ${context.goal || 'General learning'}
 Current lesson: ${context.lesson || 'General'}
@@ -163,18 +163,32 @@ ${context.examples || 'None supplied.'}
 Lesson exercises:
 ${context.exercises || 'None supplied.'}`;
 
-  try {
-    const chat = client.chats.create({
-      model: getModel(),
-      config: { systemInstruction, maxOutputTokens: 1_000 },
-      history: normalizeHistory(history),
-    });
-    const response = await chat.sendMessage({ message: message.trim() });
-    return response.text?.trim() || null;
-  } catch (error) {
-    console.error('Gemini tutor request failed:', error instanceof Error ? error.message : 'Unknown provider error');
-    return null;
+  const preferredModel = getModel();
+  const models = [...new Set([preferredModel, DEFAULT_MODEL, 'gemini-3.6-flash'])];
+  for (let index = 0; index < models.length; index++) {
+    try {
+      const chat = client.chats.create({
+        model: models[index],
+        config: { systemInstruction, maxOutputTokens: 1_000 },
+        history: normalizeHistory(history),
+      });
+      const response = await chat.sendMessage({ message: message.trim() });
+      if (response.text?.trim()) return response.text.trim();
+      return null;
+    } catch (error) {
+      const providerError = error as { status?: number; code?: number | string; message?: string };
+      const details = providerError.message || '';
+      const modelUnavailable = providerError.status === 404 || providerError.code === 404 ||
+        /model.{0,40}(not found|not available|unsupported|does not exist)|unsupported.{0,30}model/i.test(details);
+      if (modelUnavailable && index < models.length - 1) {
+        console.warn(`Gemini model ${models[index]} unavailable; trying fallback model.`);
+        continue;
+      }
+      console.error('Gemini tutor request failed:', providerError.status || providerError.code || 'unknown status', details.slice(0, 500));
+      throw error;
+    }
   }
+  return null;
 }
 
 export async function generateQuizExplanation(

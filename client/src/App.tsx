@@ -14,6 +14,8 @@ const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const RoadmapPage = lazy(() => import('./pages/RoadmapPage'));
 const LessonPage = lazy(() => import('./pages/LessonPage'));
 const QuizPage = lazy(() => import('./pages/QuizPage'));
+const QuizzesPage = lazy(() => import('./pages/QuizzesPage'));
+const LeaderboardPage = lazy(() => import('./pages/LeaderboardPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const AchievementsPage = lazy(() => import('./pages/AchievementsPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
@@ -41,6 +43,8 @@ export default function App() {
               <Route path="/roadmaps" element={<DashboardPage />} />
               <Route path="/lesson/:roadmapId/:stepId" element={<LessonPage />} />
               <Route path="/quiz/:roadmapId/:stepId" element={<QuizPage />} />
+              <Route path="/quizzes" element={<QuizzesPage />} />
+              <Route path="/leaderboard" element={<LeaderboardPage />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/achievements" element={<AchievementsPage />} />
               <Route path="*" element={<NotFoundPage />} />

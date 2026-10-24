@@ -25,6 +25,8 @@ export function GlobalAiAssistant() {
   const page = useMemo(() => {
     if (location.pathname.startsWith('/dashboard')) return 'Dashboard';
     if (location.pathname.startsWith('/roadmap')) return 'Learning roadmap';
+    if (location.pathname.startsWith('/quizzes')) return 'Quizzes';
+    if (location.pathname.startsWith('/leaderboard')) return 'Leaderboard';
     if (location.pathname.startsWith('/achievements')) return 'Achievements';
     if (location.pathname.startsWith('/profile')) return 'Profile';
     if (location.pathname.startsWith('/settings')) return 'Settings';

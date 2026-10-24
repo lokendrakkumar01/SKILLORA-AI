@@ -70,4 +70,32 @@ router.get('/activity', auth, async (req: AuthRequest, res: Response) => {
   }
 });
 
+// GET /api/progress/leaderboard — XP rankings for all learners, paginated
+router.get('/leaderboard', auth, async (req: AuthRequest, res: Response) => {
+  try {
+    const page = Math.max(1, Number.parseInt(String(req.query.page || '1'), 10) || 1);
+    const limit = 50;
+    const [leaders, total, me] = await Promise.all([
+      User.find().select('name avatar xp level totalLessonsCompleted createdAt')
+        .sort({ xp: -1, totalLessonsCompleted: -1, createdAt: 1, _id: 1 })
+        .skip((page - 1) * limit).limit(limit).lean(),
+      User.countDocuments(),
+      User.findById(req.user!.id).select('xp totalLessonsCompleted createdAt').lean(),
+    ]);
+    let myRank: number | null = null;
+    if (me) {
+      const ahead = await User.countDocuments({ $or: [
+        { xp: { $gt: me.xp } },
+        { xp: me.xp, totalLessonsCompleted: { $gt: me.totalLessonsCompleted } },
+        { xp: me.xp, totalLessonsCompleted: me.totalLessonsCompleted, createdAt: { $lt: me.createdAt } },
+      ] });
+      myRank = ahead + 1;
+    }
+    res.json({ leaders, total, page, totalPages: Math.max(1, Math.ceil(total / limit)), myRank });
+  } catch (error) {
+    console.error('Leaderboard error:', error);
+    res.status(500).json({ error: 'Could not load the leaderboard.' });
+  }
+});
+
 export default router;

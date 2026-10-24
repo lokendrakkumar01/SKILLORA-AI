@@ -7,6 +7,47 @@ import * as gamification from '../services/gamificationService';
 
 const router = Router();
 
+// GET /api/quizzes — list all quiz checkpoints from the learner's own paths
+router.get('/', auth, async (req: AuthRequest, res: Response) => {
+  try {
+    const [roadmaps, attempts] = await Promise.all([
+      Roadmap.find({ userId: req.user!.id }).select('title goal phases'),
+      QuizAttempt.find({ userId: req.user!.id }).select('roadmapId stepId score passed attemptNumber createdAt').sort('-createdAt'),
+    ]);
+    const latestAttempt = new Map<string, any>();
+    const attemptCounts = new Map<string, number>();
+    attempts.forEach((attempt) => {
+      const key = `${attempt.roadmapId}:${attempt.stepId}`;
+      if (!latestAttempt.has(key)) latestAttempt.set(key, attempt);
+      attemptCounts.set(key, (attemptCounts.get(key) || 0) + 1);
+    });
+    const quizzes: any[] = [];
+    for (const roadmap of roadmaps) {
+      for (const phase of roadmap.phases || []) {
+        for (const module of phase.modules || []) {
+          for (const step of module.steps || []) {
+            if (!step.quizQuestions?.length) continue;
+            const key = `${roadmap._id}:${step._id}`;
+            const lastAttempt = latestAttempt.get(key);
+            quizzes.push({
+              roadmapId: String(roadmap._id), stepId: String(step._id),
+              roadmapTitle: roadmap.title, goal: roadmap.goal,
+              phase: phase.title, module: module.title, title: step.title,
+              questionsCount: step.quizQuestions.length,
+              lastScore: lastAttempt?.score ?? null, passed: lastAttempt?.passed ?? false,
+              attemptCount: attemptCounts.get(key) || 0,
+            });
+          }
+        }
+      }
+    }
+    res.json({ quizzes });
+  } catch (error) {
+    console.error('List quizzes error:', error);
+    res.status(500).json({ error: 'Could not load your quizzes.' });
+  }
+});
+
 // POST /api/quizzes/:stepId/submit
 router.post('/:stepId/submit', auth, async (req: AuthRequest, res: Response) => {
   try {

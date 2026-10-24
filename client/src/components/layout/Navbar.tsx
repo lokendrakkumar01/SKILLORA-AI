@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  LayoutDashboard, Map, Trophy, User, LogOut, Menu, X, Zap, Flame, Sparkles, ArrowRight, Moon, Sun
+  LayoutDashboard, Map, Trophy, User, LogOut, Menu, X, Zap, Flame, Sparkles, ArrowRight, Moon, Sun, ClipboardCheck, Medal, MoreHorizontal
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import { UserAvatar } from '../ui/UserAvatar';
 
 const NAV_LINKS = [
   { href: '#features', label: 'Features' },
@@ -139,9 +140,18 @@ export function PublicNavbar() {
 const APP_NAV = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/roadmaps', label: 'My Roadmaps', icon: Map },
+  { href: '/quizzes', label: 'Quizzes', icon: ClipboardCheck },
+  { href: '/leaderboard', label: 'Leaderboard', icon: Medal },
   { href: '/achievements', label: 'Achievements', icon: Trophy },
   { href: '/profile', label: 'Profile', icon: User },
 ];
+
+function isAppNavActive(pathname: string, href: string) {
+  if (pathname === href || pathname.startsWith(`${href}/`)) return true;
+  if (href === '/roadmaps' && pathname.startsWith('/roadmap/')) return true;
+  if (href === '/quizzes' && pathname.startsWith('/quiz/')) return true;
+  return false;
+}
 
 export function AppSidebar() {
   const location = useLocation();
@@ -176,7 +186,7 @@ export function AppSidebar() {
 
       <nav className="flex-1 p-3.5 space-y-1.5">
         {APP_NAV.map(({ href, label, icon: Icon }) => {
-          const active = location.pathname === href || (href !== '/dashboard' && location.pathname.startsWith(href));
+          const active = isAppNavActive(location.pathname, href);
           return (
             <Link
               key={href}
@@ -198,9 +208,7 @@ export function AppSidebar() {
       {user && !collapsed && (
         <div className="p-4 border-t border-white/[0.08] bg-[#0c0c16]/50">
           <div className="flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] mb-2.5">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-violet-500 to-blue-500 flex items-center justify-center font-bold text-white text-xs shrink-0 shadow-sm">
-              {user.name?.[0]?.toUpperCase() || 'U'}
-            </div>
+            <UserAvatar name={user.name} src={user.avatar} className="h-9 w-9 text-xs shadow-sm" />
             <div className="flex-1 min-w-0">
               <p className="text-xs font-bold text-white truncate">{user.name}</p>
               <div className="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5">
@@ -233,23 +241,32 @@ export function AppSidebar() {
 export function AppMobileNav() {
   const location = useLocation();
   const { logout } = useAuth();
+  const [moreOpen, setMoreOpen] = useState(false);
+  const coreNav = APP_NAV.filter(({ href }) => ['/dashboard', '/roadmaps', '/quizzes', '/leaderboard'].includes(href));
+  const moreNav = APP_NAV.filter(({ href }) => ['/achievements', '/profile'].includes(href));
+  const moreActive = moreNav.some(({ href }) => location.pathname.startsWith(href));
 
   return (
     <nav className="app-mobile-nav" aria-label="Main navigation">
-      {APP_NAV.map(({ href, label, icon: Icon }) => {
-        const active = location.pathname === href || (href !== '/dashboard' && location.pathname.startsWith(href));
+      {coreNav.map(({ href, label, icon: Icon }) => {
+        const active = isAppNavActive(location.pathname, href);
         return (
           <Link key={href} to={href} aria-current={active ? 'page' : undefined}
-            className={`app-mobile-nav__link${active ? ' is-active' : ''}`}>
+            onClick={() => setMoreOpen(false)} className={`app-mobile-nav__link${active ? ' is-active' : ''}`}>
             <Icon className="w-5 h-5" />
-            <span>{label === 'Achievements' ? 'Awards' : label === 'My Roadmaps' ? 'Paths' : label}</span>
+            <span>{label === 'My Roadmaps' ? 'Paths' : label}</span>
           </Link>
         );
       })}
-      <button type="button" className="app-mobile-nav__link" onClick={logout} aria-label="Sign out">
-        <LogOut className="w-5 h-5" />
-        <span>Sign out</span>
-      </button>
+      <div className="app-mobile-nav__more">
+        {moreOpen && <div className="app-mobile-nav__menu">
+          {moreNav.map(({ href, label, icon: Icon }) => <Link key={href} to={href} onClick={() => setMoreOpen(false)} className="app-mobile-nav__menu-link"><Icon className="h-4 w-4" />{label}</Link>)}
+          <button type="button" onClick={logout} className="app-mobile-nav__menu-link app-mobile-nav__logout"><LogOut className="h-4 w-4" />Sign out</button>
+        </div>}
+        <button type="button" className={`app-mobile-nav__link${moreActive || moreOpen ? ' is-active' : ''}`} onClick={() => setMoreOpen((open) => !open)} aria-expanded={moreOpen} aria-label="More navigation">
+          <MoreHorizontal className="w-5 h-5" /><span>More</span>
+        </button>
+      </div>
     </nav>
   );
 }
@@ -293,9 +310,9 @@ export function AppTopbar({ title }: { title?: string }) {
 
           <button
             onClick={() => navigate('/profile')}
-            className="w-8 h-8 rounded-full bg-gradient-to-tr from-violet-500 to-blue-500 flex items-center justify-center text-white text-xs font-bold hover:scale-105 transition-transform shadow-md shadow-violet-500/25"
+            className="rounded-full text-white hover:scale-105 transition-transform shadow-md shadow-violet-500/25"
           >
-            {user.name?.[0]?.toUpperCase() || 'U'}
+            <UserAvatar name={user.name} src={user.avatar} className="h-8 w-8 text-xs" />
           </button>
         </div>
       )}

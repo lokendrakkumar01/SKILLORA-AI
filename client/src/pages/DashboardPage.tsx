@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  Zap, Flame, BookOpen, Trophy, Plus, ArrowRight,
+  Zap, Flame, BookOpen, Trophy, Plus, ArrowRight, ClipboardCheck,
   Target, BarChart2, Star
 } from 'lucide-react';
 import { progressApi } from '../api/roadmaps';
@@ -86,6 +86,9 @@ export default function DashboardPage() {
                   Continue learning
                 </Button>
               )}
+              <Button variant="secondary" onClick={() => navigate('/quizzes')} icon={<ClipboardCheck className="h-4 w-4" />}>
+                Practice quizzes
+              </Button>
               <Button variant="primary" onClick={() => navigate('/onboarding')} icon={<Plus className="h-4 w-4" />}>
                 Create learning path
               </Button>

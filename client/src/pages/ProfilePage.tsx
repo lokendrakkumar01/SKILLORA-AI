@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { User, Mail, Zap, Flame, BookOpen, Trophy, Save, Camera } from 'lucide-react';
 import { profileApi } from '../api/roadmaps';
@@ -7,6 +7,7 @@ import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
+import { UserAvatar } from '../components/ui/UserAvatar';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 
@@ -14,7 +15,9 @@ export default function ProfilePage() {
   const { user, updateUser } = useAuth();
   const [form, setForm] = useState({ name: '', bio: '' });
   const [saving, setSaving] = useState(false);
+  const [avatarBusy, setAvatarBusy] = useState(false);
   const [achievements, setAchievements] = useState<any[]>([]);
+  const avatarInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (user) setForm({ name: user.name, bio: user.bio || '' });
@@ -36,6 +39,41 @@ export default function ProfilePage() {
     }
   };
 
+  const handleAvatarChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      toast.error('Choose a JPG, PNG, or WebP image.');
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      toast.error('Choose an image smaller than 8 MB.');
+      return;
+    }
+
+    setAvatarBusy(true);
+    try {
+      const bitmap = await createImageBitmap(file);
+      const scale = Math.min(1, 512 / Math.max(bitmap.width, bitmap.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+      canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+      const context = canvas.getContext('2d');
+      if (!context) throw new Error('Your browser could not process this image.');
+      context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      bitmap.close();
+      const image = canvas.toDataURL('image/jpeg', 0.82);
+      const response = await profileApi.update({ avatar: image });
+      updateUser(response.data.user);
+      toast.success('Profile photo updated!');
+    } catch (error: any) {
+      toast.error(error.response?.data?.error || error.message || 'Could not upload your photo. Try another image.');
+    } finally {
+      setAvatarBusy(false);
+    }
+  };
+
   if (!user) return null;
 
   const stats = [
@@ -52,12 +90,12 @@ export default function ProfilePage() {
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           className="p-8 rounded-2xl border border-white/[0.06] bg-gradient-to-br from-[#111118] to-[#0D0D18] text-center">
           <div className="relative inline-block mb-4">
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-violet-500 to-blue-500 flex items-center justify-center shadow-xl shadow-violet-500/20">
-              <span className="text-white font-black text-3xl">{user.name[0]?.toUpperCase()}</span>
-            </div>
-            <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-[#111118] border border-white/10 flex items-center justify-center">
-              <Camera className="w-3.5 h-3.5 text-slate-400" />
-            </div>
+            <UserAvatar name={user.name} src={user.avatar} className="h-24 w-24 text-3xl shadow-xl shadow-violet-500/20" />
+            <input ref={avatarInput} type="file" accept="image/jpeg,image/png,image/webp" onChange={handleAvatarChange} className="sr-only" aria-label="Choose a profile photo" />
+            <button type="button" onClick={() => avatarInput.current?.click()} disabled={avatarBusy} aria-label="Change profile photo"
+              className="absolute -bottom-1 -right-1 grid h-9 w-9 place-items-center rounded-full border border-white/10 bg-[#111118] text-slate-300 shadow-lg transition hover:text-white disabled:opacity-60">
+              {avatarBusy ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-violet-400 border-t-transparent" /> : <Camera className="h-4 w-4" />}
+            </button>
           </div>
           <h1 className="text-2xl font-black text-white">{user.name}</h1>
           <p className="text-sm text-slate-400 mt-1">{user.email}</p>

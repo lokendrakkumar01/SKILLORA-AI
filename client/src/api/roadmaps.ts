@@ -14,6 +14,7 @@ export const lessonsApi = {
 };
 
 export const quizzesApi = {
+  list: () => apiClient.get('/quizzes'),
   submit: (stepId: string, data: { roadmapId: string; answers: number[] }) =>
     apiClient.post(`/quizzes/${stepId}/submit`, data),
 };
@@ -21,6 +22,7 @@ export const quizzesApi = {
 export const progressApi = {
   overview: () => apiClient.get('/progress/overview'),
   activity: () => apiClient.get('/progress/activity'),
+  leaderboard: (page = 1) => apiClient.get(`/progress/leaderboard?page=${page}`),
 };
 
 export const aiApi = {
