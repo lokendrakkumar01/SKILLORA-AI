@@ -10,6 +10,7 @@
     "build:start": "npm run build && npm start"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/compression": "^1.7.5",
     "@types/cors": "^2.8.17",

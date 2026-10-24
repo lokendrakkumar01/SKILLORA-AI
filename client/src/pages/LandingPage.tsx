@@ -264,7 +264,7 @@ export default function LandingPage() {
                       value={goalInput}
                       onChange={(e) => setGoalInput(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && handleStartWithGoal()}
-                      placeholder="e.g. Master Full Stack Web Dev in 90 days..."
+                      placeholder={`e.g. Learn ${POPULAR_GOALS[activeGoalIndex]}...`}
                       className="w-full bg-transparent text-sm text-white placeholder-slate-500 focus:outline-none py-2"
                     />
                   </div>

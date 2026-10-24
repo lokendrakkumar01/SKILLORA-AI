@@ -224,7 +224,7 @@ export default function QuizPage() {
             {answered && q.explanation && (
               <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
                 className={`mt-5 p-4 rounded-xl border ${isCorrect ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-amber-500/20 bg-amber-500/5'}`}>
-                <p className="text-xs font-semibold mb-1 ${isCorrect ? 'text-emerald-300' : 'text-amber-300'}">
+                <p className={`text-xs font-semibold mb-1 ${isCorrect ? 'text-emerald-300' : 'text-amber-300'}`}>
                   {isCorrect ? '✅ Correct!' : '💡 Explanation:'}
                 </p>
                 <p className="text-xs text-slate-300">{q.explanation}</p>

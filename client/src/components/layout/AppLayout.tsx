@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { AppSidebar, AppTopbar } from './Navbar';
+import { AppMobileNav, AppSidebar, AppTopbar } from './Navbar';
 import { PageLoader } from '../ui/LoadingSpinner';
 
 export function ProtectedLayout({ children, title }: { children: React.ReactNode; title?: string }) {
@@ -23,7 +23,7 @@ export function ProtectedLayout({ children, title }: { children: React.ReactNode
             transition={{ duration: 0.28, ease: 'easeOut' }}
             className="app-main__inner"
           >
-          {children}
+            {children}
           </motion.div>
         </main>
         <AppMobileNav />
