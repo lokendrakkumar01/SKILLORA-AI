@@ -3,530 +3,812 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
   Zap, Target, TrendingUp, BookOpen, Brain, MessageCircle, BarChart3,
-  Trophy, ArrowRight, ChevronDown, CheckCircle2, Star, Users, Clock,
-  Shield, Rocket, Map, PlayCircle, Globe
+  Trophy, ArrowRight, ChevronDown, CheckCircle2, Users, Clock,
+  PlayCircle, Sparkles, Compass, ShieldCheck, Flame, Laptop, GraduationCap
 } from 'lucide-react';
 import { PublicNavbar } from '../components/layout/Navbar';
 import { AnimatedCounter } from '../components/ui/AnimatedCounter';
-import { Badge } from '../components/ui/Badge';
 
-const GOALS = [
+const POPULAR_GOALS = [
   'Full Stack Web Development',
-  'Machine Learning & AI',
-  'Data Science with Python',
-  'Mobile App Development',
-  'Cybersecurity',
-  'UI/UX Design',
-  'Cloud Architecture',
-  'Blockchain Development',
-];
-
-const FEATURES = [
-  { icon: Zap, title: 'AI Roadmap Engine', desc: 'Get a personalized, step-by-step learning plan generated instantly for any goal.', color: 'violet' },
-  { icon: BookOpen, title: 'Interactive Lessons', desc: 'Structured content with real examples, code blocks, and hands-on exercises.', color: 'blue' },
-  { icon: Brain, title: 'Smart Quizzes', desc: 'Adaptive assessments that identify your weak spots and adjust difficulty.', color: 'cyan' },
-  { icon: BarChart3, title: 'Progress Analytics', desc: 'Visualize your learning journey with streaks, XP, and completion charts.', color: 'green' },
-  { icon: MessageCircle, title: 'AI Tutor', desc: 'Ask anything, anytime. Your personal tutor explains concepts at your level.', color: 'amber' },
-  { icon: Trophy, title: 'Achievements', desc: 'Stay motivated with XP, streaks, badges, and milestone celebrations.', color: 'red' },
-];
-
-const PATHS = [
-  { emoji: '🌐', title: 'Full Stack Web Dev', duration: '90 days', level: 'Beginner→Pro', learners: '12.4k', color: 'from-violet-600/20 to-blue-600/20', border: 'border-violet-500/20' },
-  { emoji: '🤖', title: 'Machine Learning', duration: '75 days', level: 'Intermediate', learners: '8.2k', color: 'from-blue-600/20 to-cyan-600/20', border: 'border-blue-500/20' },
-  { emoji: '🎨', title: 'UI/UX Design', duration: '45 days', level: 'Beginner', learners: '9.1k', color: 'from-pink-600/20 to-violet-600/20', border: 'border-pink-500/20' },
-  { emoji: '🔒', title: 'Cybersecurity', duration: '80 days', level: 'Intermediate', learners: '5.7k', color: 'from-green-600/20 to-emerald-600/20', border: 'border-green-500/20' },
-  { emoji: '📊', title: 'Data Analytics', duration: '60 days', level: 'Beginner', learners: '10.3k', color: 'from-amber-600/20 to-orange-600/20', border: 'border-amber-500/20' },
-  { emoji: '🐍', title: 'Python Programming', duration: '30 days', level: 'Beginner', learners: '18.6k', color: 'from-cyan-600/20 to-blue-600/20', border: 'border-cyan-500/20' },
-];
-
-const FAQS = [
-  { q: 'How does the AI generate my learning roadmap?', a: 'Our AI analyzes your goal, experience level, available time, and preferred learning style to create a structured roadmap with phases, modules, and individual lessons tailored specifically for you.' },
-  { q: 'Do I need any prior experience to start?', a: 'Not at all! SKILLORA AI supports all levels from complete beginners to advanced practitioners. Just tell us where you are and we\'ll meet you there.' },
-  { q: 'Can I change my roadmap after it\'s generated?', a: 'Yes. You can regenerate your roadmap at any time, adjust your daily time commitment, or skip ahead if you already know certain topics.' },
-  { q: 'Is the AI tutor available 24/7?', a: 'Yes! The AI tutor is available whenever you\'re studying. It understands the context of your current lesson and provides relevant, personalized explanations.' },
-  { q: 'How is progress tracked?', a: 'Progress is tracked through lesson completions, quiz scores, study streaks, and time spent. Your dashboard gives you a real-time view of your learning journey with beautiful analytics.' },
+  'AI & Machine Learning Engineering',
+  'Python for Data Science',
+  'Cybersecurity & Ethical Hacking',
+  'Modern UI/UX Design System',
+  'Mobile App Development with React Native',
 ];
 
 const STEPS = [
-  { num: '01', icon: Target, title: 'Tell Us Your Goal', desc: 'Enter what you want to learn — any topic, skill, or career goal. The more specific, the better the roadmap.' },
-  { num: '02', icon: Map, title: 'Get Your AI Roadmap', desc: 'Receive a personalized, structured learning path with phases, modules, and individual lessons built for your level and schedule.' },
-  { num: '03', icon: TrendingUp, title: 'Learn, Practice, Progress', desc: 'Work through lessons, take quizzes, ask the AI tutor questions, and track your progress with satisfying analytics.' },
+  {
+    step: '01',
+    icon: Target,
+    title: 'Enter Any Ambition',
+    desc: 'Tell Skillora AI what you want to master, your weekly time availability, and current skill baseline.',
+    badge: 'Step 1: Goal Setup',
+    gradient: 'from-violet-500/20 to-purple-500/10'
+  },
+  {
+    step: '02',
+    icon: Compass,
+    title: 'Dynamic AI Curriculum',
+    desc: 'Get a comprehensive roadmap broken into structured phases, manageable modules, and interactive lessons.',
+    badge: 'Step 2: AI Generation',
+    gradient: 'from-indigo-500/20 to-blue-500/10'
+  },
+  {
+    step: '03',
+    icon: TrendingUp,
+    title: 'Practice & Prove Mastery',
+    desc: 'Learn through guided concepts, chat with your dedicated AI tutor, test yourself in quizzes, and earn verifiable XP.',
+    badge: 'Step 3: Continuous Growth',
+    gradient: 'from-cyan-500/20 to-emerald-500/10'
+  },
+];
+
+const FEATURES = [
+  {
+    icon: Zap,
+    title: 'AI Roadmap Engine',
+    desc: 'Generate tailored syllabi with prerequisites, estimated times, and milestone checkpoints for any subject.',
+    color: 'text-violet-400',
+    bg: 'bg-violet-500/10',
+    border: 'border-violet-500/20'
+  },
+  {
+    icon: BookOpen,
+    title: 'Interactive Workspaces',
+    desc: 'Clean, distraction-free lessons featuring structured breakdowns, runnable code snippets, and hands-on exercises.',
+    color: 'text-blue-400',
+    bg: 'bg-blue-500/10',
+    border: 'border-blue-500/20'
+  },
+  {
+    icon: Brain,
+    title: 'Contextual AI Tutor',
+    desc: 'Ask questions directly within lessons. Get simplified analogies, code breakdowns, and hints without leaving your workspace.',
+    color: 'text-cyan-400',
+    bg: 'bg-cyan-500/10',
+    border: 'border-cyan-500/20'
+  },
+  {
+    icon: ShieldCheck,
+    title: 'Adaptive Quiz Engine',
+    desc: 'Evaluate your comprehension with instant feedback, deep answer explanations, and topic-level scoring.',
+    color: 'text-emerald-400',
+    bg: 'bg-emerald-500/10',
+    border: 'border-emerald-500/20'
+  },
+  {
+    icon: BarChart3,
+    title: 'Progress Intelligence',
+    desc: 'Measure your consistency with weekly study charts, streak tracking, and skill mastery percentages.',
+    color: 'text-amber-400',
+    bg: 'bg-amber-500/10',
+    border: 'border-amber-500/20'
+  },
+  {
+    icon: Trophy,
+    title: 'Gamified Milestones',
+    desc: 'Level up with earned XP, maintain daily study streaks, unlock achievement badges, and celebrate progress.',
+    color: 'text-pink-400',
+    bg: 'bg-pink-500/10',
+    border: 'border-pink-500/20'
+  },
+];
+
+const POPULAR_PATHS = [
+  {
+    title: 'Full Stack Web Development',
+    category: 'Software Engineering',
+    duration: '90 Days',
+    level: 'Beginner to Pro',
+    learners: '14.2k learners',
+    icon: Laptop,
+    accent: 'border-violet-500/30 hover:border-violet-500/60'
+  },
+  {
+    title: 'Applied Machine Learning',
+    category: 'Artificial Intelligence',
+    duration: '75 Days',
+    level: 'Intermediate',
+    learners: '9.8k learners',
+    icon: Brain,
+    accent: 'border-indigo-500/30 hover:border-indigo-500/60'
+  },
+  {
+    title: 'Python for Data Analytics',
+    category: 'Data Science',
+    duration: '45 Days',
+    level: 'Beginner Friendly',
+    learners: '18.1k learners',
+    icon: BarChart3,
+    accent: 'border-blue-500/30 hover:border-blue-500/60'
+  },
+  {
+    title: 'Modern UI/UX Design System',
+    category: 'Product Design',
+    duration: '40 Days',
+    level: 'All Levels',
+    learners: '8.4k learners',
+    icon: Sparkles,
+    accent: 'border-pink-500/30 hover:border-pink-500/60'
+  },
+  {
+    title: 'Cybersecurity Fundamentals',
+    category: 'Security & Networks',
+    duration: '60 Days',
+    level: 'Intermediate',
+    learners: '6.7k learners',
+    icon: ShieldCheck,
+    accent: 'border-emerald-500/30 hover:border-emerald-500/60'
+  },
+  {
+    title: 'Cloud Architecture & DevOps',
+    category: 'Infrastructure',
+    duration: '60 Days',
+    level: 'Intermediate',
+    learners: '7.3k learners',
+    icon: Compass,
+    accent: 'border-amber-500/30 hover:border-amber-500/60'
+  },
+];
+
+const FAQS = [
+  {
+    q: 'How does Skillora AI customize my learning path?',
+    a: 'Skillora assesses your specific goal, prior experience level, target timeline, and available hours per day. Using our AI roadmap algorithm, it structures high-yield modules, exercises, and quizzes calibrated to prevent overwhelm while accelerating comprehension.'
+  },
+  {
+    q: 'What if I get stuck on a difficult concept or exercise?',
+    a: 'Every lesson features an intelligent AI Tutor side panel. It understands your exact lesson context and can simplify theories into real-world analogies, suggest code fixes, or quiz you on prerequisite knowledge until you feel confident.'
+  },
+  {
+    q: 'Can I regenerate or adapt my roadmap as I progress?',
+    a: 'Yes! Learning isn\'t linear. You can adjust your daily time goals, regenerate roadmaps with new requirements, or mark already-known topics as completed to fast-forward through familiar material.'
+  },
+  {
+    q: 'Is Skillora AI suitable for absolute beginners?',
+    a: 'Absolutely. When selecting the "Beginner" level in onboarding, the platform breaks down foundational concepts into bite-sized explanations, accompanied by intuitive visuals and gentle starter practice.'
+  },
+  {
+    q: 'How does the gamification and streak system work?',
+    a: 'You earn XP for reading lessons and passing quiz checkpoints. Daily streaks record your active study days, rewarding consistent dedication without overwhelming you.'
+  },
 ];
 
 export default function LandingPage() {
   const navigate = useNavigate();
   const [goalInput, setGoalInput] = useState('');
-  const [currentGoal, setCurrentGoal] = useState(0);
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [activeGoalIndex, setActiveGoalIndex] = useState(0);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   useEffect(() => {
-    const interval = setInterval(() => setCurrentGoal((c) => (c + 1) % GOALS.length), 2800);
-    return () => clearInterval(interval);
+    const timer = setInterval(() => {
+      setActiveGoalIndex((prev) => (prev + 1) % POPULAR_GOALS.length);
+    }, 3200);
+    return () => clearInterval(timer);
   }, []);
 
-  const handleStart = () => {
-    if (goalInput.trim()) {
-      localStorage.setItem('skillora_goal_draft', goalInput.trim());
+  const handleStartWithGoal = (goalToUse?: string) => {
+    const selected = goalToUse || goalInput.trim();
+    if (selected) {
+      localStorage.setItem('skillora_goal_draft', selected);
     }
     navigate('/register');
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F] text-slate-200">
+    <div className="min-h-screen bg-[#07070b] text-slate-100 selection:bg-violet-600 selection:text-white">
       <PublicNavbar />
 
-      {/* HERO */}
-      <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
-        {/* Background effects */}
-        <div className="absolute inset-0 grid-bg opacity-40" />
-        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute top-20 right-1/4 w-[400px] h-[400px] bg-blue-600/8 rounded-full blur-3xl pointer-events-none" />
-        {/* Floating particles */}
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1.5 h-1.5 rounded-full bg-violet-500/60"
-            style={{ left: `${15 + i * 15}%`, top: `${20 + (i % 3) * 20}%` }}
-            animate={{ y: [-10, 10, -10], opacity: [0.4, 1, 0.4] }}
-            transition={{ duration: 3 + i * 0.5, repeat: Infinity, delay: i * 0.4 }}
-          />
-        ))}
+      {/* =========================================================================
+          HERO SECTION
+          ========================================================================= */}
+      <section className="relative pt-32 pb-24 md:pt-40 md:pb-36 overflow-hidden">
+        {/* Ambient Glows & Grid */}
+        <div className="absolute inset-0 grid-background opacity-40 pointer-events-none" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] hero-glow-1 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-1/3 right-10 w-[500px] h-[400px] hero-glow-2 rounded-full blur-[100px] pointer-events-none" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-20 grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left: Content */}
-          <div>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-8">
-                <Zap className="w-3.5 h-3.5 text-violet-400" />
-                <span className="text-xs text-violet-300 font-medium">AI-Powered Learning • Free to Start</span>
-              </div>
-
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-[1.05] tracking-tight mb-6">
-                <span className="text-white">Stop Wondering</span>
-                <br />
-                <span className="text-gradient">What to Learn</span>
-                <br />
-                <span className="text-white">Next.</span>
-              </h1>
-
-              <p className="text-lg text-slate-400 leading-relaxed mb-8 max-w-lg">
-                Your personal AI learning guide turns ambitious goals into clear steps, practical lessons, and visible progress.
-              </p>
-
-              {/* Goal input */}
-              <div className="flex flex-col sm:flex-row gap-3 mb-6">
-                <div className="flex-1 relative">
-                  <input
-                    value={goalInput}
-                    onChange={(e) => setGoalInput(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleStart()}
-                    placeholder="What do you want to master?"
-                    className="w-full px-5 py-4 rounded-2xl bg-[#111118] border border-white/10 text-slate-200 placeholder-slate-500 text-sm focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 transition-all"
-                  />
-                </div>
-                <motion.button
-                  whileHover={{ scale: 1.04, boxShadow: '0 0 30px rgba(124,58,237,0.4)' }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={handleStart}
-                  className="px-7 py-4 rounded-2xl bg-gradient-to-r from-violet-600 to-blue-600 text-white font-bold text-sm whitespace-nowrap flex items-center gap-2 shadow-lg shadow-violet-500/25"
-                >
-                  Build My Path <ArrowRight className="w-4 h-4" />
-                </motion.button>
-              </div>
-
-              {/* Cycling suggestions */}
-              <div className="flex items-center gap-2 text-sm text-slate-500">
-                <span>Try:</span>
-                <AnimatePresence mode="wait">
-                  <motion.button
-                    key={currentGoal}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.3 }}
-                    onClick={() => setGoalInput(GOALS[currentGoal])}
-                    className="text-violet-400 hover:text-violet-300 font-medium transition-colors cursor-pointer"
-                  >
-                    {GOALS[currentGoal]}
-                  </motion.button>
-                </AnimatePresence>
-              </div>
-
-              {/* Stats */}
-              <div className="flex flex-wrap gap-6 mt-10">
-                {[
-                  { value: 50, suffix: 'k+', label: 'Learners' },
-                  { value: 200, suffix: '+', label: 'Learning Paths' },
-                  { value: 98, suffix: '%', label: 'Satisfaction' },
-                ].map(({ value, suffix, label }) => (
-                  <div key={label}>
-                    <div className="text-2xl font-black text-white">
-                      <AnimatedCounter target={value} suffix={suffix} />
-                    </div>
-                    <div className="text-xs text-slate-500 mt-0.5">{label}</div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Right: Animated Roadmap Preview */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="hidden lg:block"
-          >
-            <div className="relative">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+            {/* Left Content Column */}
+            <div className="lg:col-span-7 flex flex-col items-start text-left">
+              {/* Badge */}
               <motion.div
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                className="rounded-2xl border border-white/[0.08] bg-[#111118] p-6 shadow-2xl shadow-black/50"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/25 backdrop-blur-md mb-6"
               >
-                <div className="flex items-center justify-between mb-5">
-                  <div>
-                    <h3 className="text-white font-bold text-sm">Full Stack Web Development</h3>
-                    <p className="text-xs text-slate-400 mt-0.5">90-day roadmap • Beginner</p>
+                <Sparkles className="w-4 h-4 text-violet-400" />
+                <span className="text-xs font-semibold text-violet-300">
+                  Next-Gen AI Learning Platform
+                </span>
+              </motion.div>
+
+              {/* Headline */}
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.12] mb-6"
+              >
+                Stop Wondering <br />
+                <span className="gradient-text-accent">What to Learn</span> Next.
+              </motion.h1>
+
+              {/* Subheadline */}
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="text-base sm:text-lg text-slate-300 max-w-xl leading-relaxed mb-8"
+              >
+                Your personal AI guide turns ambitious learning goals into step-by-step
+                roadmaps, interactive lessons, smart practice quizzes, and visible progress.
+              </motion.p>
+
+              {/* Goal Input Bar */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="w-full max-w-xl mb-4"
+              >
+                <div className="relative p-1.5 rounded-2xl bg-[#11111e]/90 border border-white/[0.12] focus-within:border-violet-500/60 focus-within:ring-4 focus-within:ring-violet-500/20 transition-all shadow-2xl flex flex-col sm:flex-row gap-2">
+                  <div className="flex-1 flex items-center px-3.5">
+                    <Target className="w-5 h-5 text-violet-400 shrink-0 mr-3" />
+                    <input
+                      type="text"
+                      value={goalInput}
+                      onChange={(e) => setGoalInput(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleStartWithGoal()}
+                      placeholder="e.g. Master Full Stack Web Dev in 90 days..."
+                      className="w-full bg-transparent text-sm text-white placeholder-slate-500 focus:outline-none py-2"
+                    />
                   </div>
-                  <div className="text-right">
-                    <div className="text-xs text-violet-300 font-semibold">35% done</div>
-                    <div className="w-20 h-1.5 bg-white/10 rounded-full mt-1.5">
-                      <div className="w-[35%] h-full bg-gradient-to-r from-violet-500 to-blue-500 rounded-full" />
-                    </div>
-                  </div>
-                </div>
-                {[
-                  { phase: 'Phase 1', title: 'HTML & CSS Fundamentals', status: 'done', steps: 8 },
-                  { phase: 'Phase 2', title: 'JavaScript Essentials', status: 'active', steps: 12 },
-                  { phase: 'Phase 3', title: 'React & Modern Frontend', status: 'locked', steps: 10 },
-                  { phase: 'Phase 4', title: 'Node.js & Backend', status: 'locked', steps: 14 },
-                ].map((item, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.5 + i * 0.15 }}
-                    className={`flex items-center gap-3 p-3 rounded-xl mb-2 transition-all ${
-                      item.status === 'active' ? 'bg-violet-500/15 border border-violet-500/25' :
-                      item.status === 'done' ? 'bg-white/[0.03]' : 'opacity-40 bg-white/[0.02]'
-                    }`}
+                  <button
+                    onClick={() => handleStartWithGoal()}
+                    className="btn-primary-glow px-6 py-3.5 rounded-xl text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer shrink-0"
                   >
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
-                      item.status === 'done' ? 'bg-emerald-500/20 text-emerald-400' :
-                      item.status === 'active' ? 'bg-violet-500/25 text-violet-400' :
-                      'bg-white/5 text-slate-600'
-                    }`}>
-                      {item.status === 'done' ? <CheckCircle2 className="w-4 h-4" /> :
-                       item.status === 'active' ? <PlayCircle className="w-4 h-4" /> :
-                       <Shield className="w-4 h-4" />}
+                    Build My Path
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </motion.div>
+
+              {/* Quick Prompt Chips */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="flex items-center flex-wrap gap-2 text-xs text-slate-400 mb-10"
+              >
+                <span className="font-semibold text-slate-400">Popular:</span>
+                {POPULAR_GOALS.slice(0, 3).map((goal) => (
+                  <button
+                    key={goal}
+                    onClick={() => {
+                      setGoalInput(goal);
+                      handleStartWithGoal(goal);
+                    }}
+                    className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.08] hover:border-violet-500/40 hover:text-violet-300 text-slate-300 transition-all cursor-pointer"
+                  >
+                    {goal}
+                  </button>
+                ))}
+              </motion.div>
+
+              {/* Social Proof Stats */}
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+                className="grid grid-cols-3 gap-6 sm:gap-10 pt-6 border-t border-white/[0.08] w-full max-w-lg"
+              >
+                <div>
+                  <div className="text-2xl sm:text-3xl font-extrabold text-white">
+                    <AnimatedCounter target={50} suffix="k+" />
+                  </div>
+                  <div className="text-xs text-slate-400 mt-0.5 font-medium">Active Learners</div>
+                </div>
+                <div>
+                  <div className="text-2xl sm:text-3xl font-extrabold text-white">
+                    <AnimatedCounter target={200} suffix="+" />
+                  </div>
+                  <div className="text-xs text-slate-400 mt-0.5 font-medium">Curated Paths</div>
+                </div>
+                <div>
+                  <div className="text-2xl sm:text-3xl font-extrabold text-violet-400">
+                    <AnimatedCounter target={98} suffix="%" />
+                  </div>
+                  <div className="text-xs text-slate-400 mt-0.5 font-medium">Goal Success</div>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Right Column: Interactive App Preview Mockup */}
+            <div className="lg:col-span-5 relative">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.94, y: 30 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.2 }}
+                className="rounded-3xl p-1 bg-gradient-to-b from-white/[0.15] via-white/[0.05] to-transparent shadow-2xl"
+              >
+                <div className="bg-[#0e0e18] rounded-[22px] p-6 border border-white/[0.08]">
+                  {/* Browser Window Bar */}
+                  <div className="flex items-center justify-between pb-4 mb-5 border-b border-white/[0.08]">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full bg-rose-500/80" />
+                      <div className="w-3 h-3 rounded-full bg-amber-500/80" />
+                      <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-xs text-slate-500">{item.phase}</div>
-                      <div className={`text-sm font-medium truncate ${item.status === 'locked' ? 'text-slate-600' : 'text-slate-200'}`}>
-                        {item.title}
+                    <span className="text-[11px] font-mono text-slate-400">skillora.ai/roadmap</span>
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                      Live Engine
+                    </span>
+                  </div>
+
+                  {/* Header in Roadmap */}
+                  <div className="flex items-start justify-between mb-5">
+                    <div>
+                      <h4 className="text-sm font-bold text-white">Full Stack Web Development</h4>
+                      <p className="text-[11px] text-slate-400 mt-0.5">Phase 2: Modern JavaScript & APIs</p>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-xs font-bold text-violet-300">45% Completed</span>
+                      <div className="w-24 h-1.5 rounded-full bg-white/10 mt-1.5 overflow-hidden">
+                        <div className="w-[45%] h-full bg-gradient-to-r from-violet-500 to-indigo-500 rounded-full" />
                       </div>
                     </div>
-                    <div className="text-xs text-slate-500">{item.steps} steps</div>
-                  </motion.div>
-                ))}
-                <div className="mt-4 pt-4 border-t border-white/[0.06] flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-xs text-slate-400">
-                    <Zap className="w-3.5 h-3.5 text-amber-400" />
-                    <span>1,250 XP earned</span>
                   </div>
-                  <Badge variant="violet">🔥 5 day streak</Badge>
-                </div>
-              </motion.div>
 
-              {/* Floating AI chat bubble */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1 }}
-                className="absolute -bottom-6 -left-6 bg-[#1A1A2E] border border-white/[0.08] rounded-2xl p-4 shadow-xl max-w-[200px]"
-              >
-                <div className="flex items-start gap-2">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-violet-500 to-blue-500 flex items-center justify-center shrink-0">
-                    <Brain className="w-3 h-3 text-white" />
+                  {/* Mock Steps */}
+                  <div className="space-y-2.5">
+                    {[
+                      { title: 'HTML5 Semantic Layouts & CSS Grid', time: '25 min', status: 'done' },
+                      { title: 'JavaScript Asynchronous Flow & Promises', time: '30 min', status: 'active' },
+                      { title: 'State Management with React & Hooks', time: '40 min', status: 'locked' },
+                      { title: 'REST API Architecture with Express', time: '35 min', status: 'locked' },
+                    ].map((step, idx) => (
+                      <div
+                        key={idx}
+                        className={`flex items-center justify-between p-3.5 rounded-xl border transition-all ${
+                          step.status === 'active'
+                            ? 'bg-violet-600/15 border-violet-500/40 shadow-lg shadow-violet-500/10'
+                            : step.status === 'done'
+                            ? 'bg-emerald-500/5 border-emerald-500/20 text-slate-300'
+                            : 'bg-white/[0.02] border-white/[0.05] opacity-50'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          {step.status === 'done' ? (
+                            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                          ) : step.status === 'active' ? (
+                            <PlayCircle className="w-4 h-4 text-violet-400 shrink-0 animate-pulse" />
+                          ) : (
+                            <div className="w-4 h-4 rounded-full border border-slate-600 shrink-0" />
+                          )}
+                          <span className={`text-xs font-medium ${step.status === 'active' ? 'text-white font-semibold' : 'text-slate-300'}`}>
+                            {step.title}
+                          </span>
+                        </div>
+                        <span className="text-[10px] text-slate-400 font-mono shrink-0 ml-2">
+                          {step.time}
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                  <div>
-                    <p className="text-xs text-slate-300 leading-relaxed">"Great progress! Ready for JavaScript? Let's dive in 🚀"</p>
+
+                  {/* AI Tutor Card Inside Mockup */}
+                  <div className="mt-4 p-3.5 rounded-xl bg-gradient-to-br from-[#161628] to-[#12121f] border border-violet-500/20 flex items-start gap-3">
+                    <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center shrink-0">
+                      <Brain className="w-3.5 h-3.5 text-white" />
+                    </div>
+                    <div className="flex-1 text-[11px] text-slate-300 leading-relaxed">
+                      <span className="font-bold text-violet-300">Skillora AI Tutor:</span> "Notice how Async/Await eliminates callback nesting. Ready for the practice challenge?"
+                    </div>
+                  </div>
+
+                  {/* Bottom Stats */}
+                  <div className="mt-4 pt-3.5 border-t border-white/[0.06] flex items-center justify-between text-[11px]">
+                    <span className="text-amber-300 font-semibold flex items-center gap-1">
+                      <Zap className="w-3.5 h-3.5 text-amber-400 fill-amber-400" /> +350 XP Gained
+                    </span>
+                    <span className="text-orange-300 font-semibold flex items-center gap-1">
+                      <Flame className="w-3.5 h-3.5 text-orange-400 fill-orange-400" /> 6 Days Streak
+                    </span>
                   </div>
                 </div>
               </motion.div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* HOW IT WORKS */}
-      <section id="how-it-works" className="py-24 relative">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <Badge variant="blue" className="mb-4">How It Works</Badge>
-            <h2 className="text-4xl sm:text-5xl font-black text-white mb-4">
-              Three Steps to <span className="text-gradient">Mastery</span>
+      {/* =========================================================================
+          SECTION 2: HOW IT WORKS
+          ========================================================================= */}
+      <section id="how-it-works" className="py-24 md:py-32 relative border-t border-white/[0.06] bg-[#090910]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-semibold mb-4">
+              Simple 3-Step Process
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-4">
+              How Skillora AI <span className="gradient-text-accent">Guides You</span>
             </h2>
-            <p className="text-lg text-slate-400 max-w-xl mx-auto">
-              Go from idea to expertise with AI-guided learning that adapts to you.
+            <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
+              No more doom-scrolling tutorial hell. Convert your ambition into clear daily habits.
             </p>
-          </motion.div>
+          </div>
 
-          <div className="grid md:grid-cols-3 gap-6 relative">
-            {STEPS.map((step, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }}
-                className="relative p-8 rounded-2xl border border-white/[0.06] bg-gradient-to-b from-[#131320] to-[#0F0F1A] hover:border-violet-500/30 transition-all group"
-              >
-                <div className="absolute -top-3 left-8">
-                  <span className="text-5xl font-black text-white/[0.04] group-hover:text-white/[0.07] transition-colors">{step.num}</span>
-                </div>
-                <div className="w-12 h-12 rounded-2xl bg-violet-500/15 border border-violet-500/25 flex items-center justify-center mb-5">
-                  <step.icon className="w-6 h-6 text-violet-400" />
-                </div>
-                <h3 className="text-lg font-bold text-white mb-3">{step.title}</h3>
-                <p className="text-sm text-slate-400 leading-relaxed">{step.desc}</p>
-                {i < 2 && (
-                  <div className="hidden md:block absolute top-1/2 -right-3 w-6 h-[2px] bg-gradient-to-r from-violet-500/50 to-transparent" />
-                )}
-              </motion.div>
-            ))}
+          <div className="grid md:grid-cols-3 gap-8">
+            {STEPS.map((s, idx) => {
+              const Icon = s.icon;
+              return (
+                <motion.div
+                  key={s.step}
+                  initial={{ opacity: 0, y: 25 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: idx * 0.15 }}
+                  className="relative p-8 rounded-3xl bg-[#0f0f1b] border border-white/[0.08] hover:border-violet-500/40 transition-all duration-300 group hover:-translate-y-1.5 shadow-xl"
+                >
+                  {/* Step Number Indicator */}
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-violet-500/25">
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <span className="text-3xl font-black text-white/10 group-hover:text-violet-400/30 transition-colors">
+                      {s.step}
+                    </span>
+                  </div>
+
+                  <span className="text-[11px] font-bold text-violet-400 uppercase tracking-wider block mb-2">
+                    {s.badge}
+                  </span>
+                  <h3 className="text-lg font-bold text-white mb-3 tracking-tight">
+                    {s.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                    {s.desc}
+                  </p>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* FEATURES */}
-      <section id="features" className="py-24 bg-[#080810] relative">
-        <div className="absolute inset-0 grid-bg opacity-30" />
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <Badge variant="violet" className="mb-4">Platform Features</Badge>
-            <h2 className="text-4xl sm:text-5xl font-black text-white mb-4">
-              Everything You Need to <span className="text-gradient">Succeed</span>
+      {/* =========================================================================
+          SECTION 3: PLATFORM FEATURES
+          ========================================================================= */}
+      <section id="features" className="py-24 md:py-32 relative border-t border-white/[0.06]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-xs font-semibold mb-4">
+              Comprehensive Toolkit
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-4">
+              Engineered for <span className="gradient-text-accent">Deep Learning</span>
             </h2>
-          </motion.div>
+            <p className="text-sm sm:text-base text-slate-400">
+              Everything you need to transform from beginner curiosity to professional mastery.
+            </p>
+          </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {FEATURES.map((f, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                whileHover={{ y: -5, borderColor: 'rgba(124,58,237,0.35)' }}
-                className="p-6 rounded-2xl border border-white/[0.06] bg-[#0D0D18] group transition-all duration-300 hover:shadow-xl hover:shadow-black/40"
-              >
-                <div className="w-11 h-11 rounded-xl bg-violet-500/15 flex items-center justify-center mb-5 group-hover:bg-violet-500/25 transition-colors">
-                  <f.icon className="w-5 h-5 text-violet-400" />
-                </div>
-                <h3 className="text-base font-bold text-white mb-2">{f.title}</h3>
-                <p className="text-sm text-slate-400 leading-relaxed">{f.desc}</p>
-              </motion.div>
-            ))}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {FEATURES.map((f, idx) => {
+              const Icon = f.icon;
+              return (
+                <motion.div
+                  key={f.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: idx * 0.08 }}
+                  className="p-7 rounded-3xl bg-[#0d0d17] border border-white/[0.08] hover:border-violet-500/30 hover:bg-[#11111f] transition-all duration-300 group hover:-translate-y-1 shadow-md"
+                >
+                  <div className={`w-11 h-11 rounded-2xl ${f.bg} border ${f.border} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
+                    <Icon className={`w-5 h-5 ${f.color}`} />
+                  </div>
+                  <h3 className="text-base font-bold text-white mb-2 tracking-tight">
+                    {f.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                    {f.desc}
+                  </p>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* POPULAR PATHS */}
-      <section id="paths" className="py-24">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <Badge variant="green" className="mb-4">Popular Paths</Badge>
-            <h2 className="text-4xl sm:text-5xl font-black text-white mb-4">
-              Start with a <span className="text-gradient">Proven Path</span>
-            </h2>
-            <p className="text-lg text-slate-400">Or enter any custom goal for a personalized roadmap.</p>
-          </motion.div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {PATHS.map((path, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0.97 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-                whileHover={{ y: -5 }}
-                onClick={() => { setGoalInput(path.title); navigate('/register'); }}
-                className={`p-6 rounded-2xl border ${path.border} bg-gradient-to-br ${path.color} cursor-pointer hover:shadow-xl hover:shadow-black/40 transition-all group`}
-              >
-                <div className="text-3xl mb-4">{path.emoji}</div>
-                <h3 className="text-white font-bold text-base mb-2">{path.title}</h3>
-                <div className="flex items-center gap-3 text-xs text-slate-400">
-                  <div className="flex items-center gap-1"><Clock className="w-3 h-3" />{path.duration}</div>
-                  <div className="flex items-center gap-1"><Users className="w-3 h-3" />{path.learners}</div>
-                </div>
-                <div className="mt-3">
-                  <Badge variant="dark">{path.level}</Badge>
-                </div>
-                <div className="mt-4 flex items-center text-violet-400 text-xs font-medium gap-1 group-hover:gap-2 transition-all">
-                  Start this path <ArrowRight className="w-3 h-3" />
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* AI TUTOR DEMO */}
-      <section className="py-24 bg-[#080810]">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-              <Badge variant="cyan" className="mb-5">AI Tutor</Badge>
-              <h2 className="text-4xl font-black text-white mb-4">
-                Your Personal <span className="text-gradient">AI Tutor</span> — Always Available
+      {/* =========================================================================
+          SECTION 4: POPULAR LEARNING PATHS
+          ========================================================================= */}
+      <section id="paths" className="py-24 md:py-32 relative border-t border-white/[0.06] bg-[#090910]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-semibold mb-4">
+                Pre-Tested Curricula
+              </div>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white">
+                Popular Learning <span className="gradient-text-accent">Tracks</span>
               </h2>
-              <p className="text-slate-400 text-base leading-relaxed mb-6">
-                Stuck on a concept? Ask your AI tutor and get instant, clear explanations tailored to your exact learning context and level.
+            </div>
+            <button
+              onClick={() => navigate('/register')}
+              className="text-xs font-bold text-violet-400 hover:text-violet-300 flex items-center gap-1.5 self-start md:self-auto cursor-pointer"
+            >
+              Browse All Topics <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {POPULAR_PATHS.map((path, idx) => {
+              const Icon = path.icon;
+              return (
+                <motion.div
+                  key={path.title}
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: idx * 0.08 }}
+                  onClick={() => handleStartWithGoal(path.title)}
+                  className={`p-6 rounded-3xl bg-[#0f0f1b] border ${path.accent} cursor-pointer group hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between shadow-xl`}
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
+                        {path.category}
+                      </span>
+                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-white/[0.06] text-slate-300">
+                        {path.level}
+                      </span>
+                    </div>
+
+                    <div className="flex items-start gap-3.5 mb-4">
+                      <div className="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400 shrink-0 group-hover:scale-105 transition-transform">
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <h3 className="text-base font-bold text-white group-hover:text-violet-300 transition-colors">
+                        {path.title}
+                      </h3>
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between text-xs text-slate-400">
+                    <span className="flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-slate-400" /> {path.duration}
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <Users className="w-3.5 h-3.5 text-slate-400" /> {path.learners}
+                    </span>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION 5: AI TUTOR SHOWCASE
+          ========================================================================= */}
+      <section id="tutor" className="py-24 md:py-32 relative border-t border-white/[0.06]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-12 gap-12 items-center">
+            {/* Left Narrative */}
+            <div className="lg:col-span-6">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-semibold mb-4">
+                Contextual Intelligence
+              </div>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-6">
+                Meet Your 24/7 <br />
+                <span className="gradient-text-accent">AI Learning Partner</span>
+              </h2>
+              <p className="text-sm sm:text-base text-slate-300 leading-relaxed mb-8">
+                Whenever a lesson feels abstract or a quiz question confuses you, the AI Tutor
+                is right beside you with tailored explanations, real-world metaphors, and step-by-step guidance.
               </p>
-              <div className="space-y-3">
-                {['Explains any concept at your level', 'Gives real-world examples instantly', 'Generates practice questions', 'Hints before revealing answers', 'Remembers your current lesson'].map((item, i) => (
-                  <motion.div key={i} initial={{ opacity: 0, x: -15 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                    className="flex items-center gap-3 text-sm text-slate-300">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                    {item}
-                  </motion.div>
+
+              <div className="space-y-4">
+                {[
+                  'Explains complex theories at your current level of experience',
+                  'Gives practical, production-ready code examples instantly',
+                  'Offers progressive hints instead of spoiling answers',
+                  'Suggests targeted revision whenever you struggle with a topic'
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                    <span className="text-xs sm:text-sm text-slate-300 font-medium">{item}</span>
+                  </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
-              className="rounded-2xl border border-white/[0.08] bg-[#0F0F1A] overflow-hidden">
-              <div className="p-4 border-b border-white/[0.06] flex items-center gap-2">
-                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-violet-500 to-blue-500 flex items-center justify-center">
-                  <Brain className="w-3.5 h-3.5 text-white" />
-                </div>
-                <span className="text-sm font-semibold text-white">SKILLORA Tutor</span>
-                <span className="ml-auto"><Badge variant="green">Online</Badge></span>
-              </div>
-              <div className="p-5 space-y-4">
-                <div className="flex justify-end">
-                  <div className="bg-violet-500/20 border border-violet-500/30 rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[75%]">
-                    <p className="text-sm text-slate-200">I don't understand async/await in JavaScript</p>
+            {/* Right Chat UI Simulation */}
+            <div className="lg:col-span-6">
+              <div className="rounded-3xl p-1 bg-gradient-to-br from-violet-500/30 via-white/[0.08] to-transparent shadow-2xl">
+                <div className="bg-[#0c0c16] rounded-[22px] p-6 border border-white/[0.08]">
+                  {/* Tutor Header */}
+                  <div className="flex items-center justify-between pb-4 mb-4 border-b border-white/[0.08]">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center text-white">
+                        <Brain className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-bold text-white">Skillora Tutor</h4>
+                        <span className="text-[10px] text-emerald-400 font-medium flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Active in Current Lesson
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Messages */}
+                  <div className="space-y-3.5 mb-4 text-xs">
+                    <div className="flex justify-end">
+                      <div className="bg-violet-600/25 border border-violet-500/40 text-slate-100 rounded-2xl rounded-tr-sm px-4 py-3 max-w-[85%] leading-relaxed">
+                        I still don't quite understand why we use useEffect dependencies in React?
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-2.5">
+                      <div className="w-6 h-6 rounded-lg bg-violet-600/30 flex items-center justify-center shrink-0 mt-1">
+                        <Brain className="w-3.5 h-3.5 text-violet-400" />
+                      </div>
+                      <div className="bg-[#141424] border border-white/[0.08] text-slate-200 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[85%] leading-relaxed space-y-2">
+                        <p>
+                          Think of dependencies like an <strong className="text-white">alert trigger 🔔</strong>.
+                        </p>
+                        <p className="text-slate-300">
+                          If the dependency list is empty <code className="text-violet-300 bg-white/5 px-1 py-0.5 rounded">[]</code>, the effect runs only once when the component is mounted. If you put <code className="text-violet-300 bg-white/5 px-1 py-0.5 rounded">[userId]</code>, it re-runs only when the <code className="text-violet-300">userId</code> changes!
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Quick Pill Prompts */}
+                  <div className="flex flex-wrap gap-2 pt-2 border-t border-white/[0.06]">
+                    {['Show a code example', 'Give me a practice quiz', 'Explain with an analogy'].map((p) => (
+                      <span
+                        key={p}
+                        className="text-[11px] px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-slate-300 hover:text-white hover:border-violet-500/40 cursor-pointer transition-all"
+                      >
+                        {p}
+                      </span>
+                    ))}
                   </div>
                 </div>
-                <div className="flex gap-2.5">
-                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-violet-500 to-blue-500 flex items-center justify-center shrink-0 mt-1">
-                    <Brain className="w-3.5 h-3.5 text-white" />
-                  </div>
-                  <div className="bg-[#1A1A2E] border border-white/[0.06] rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-[80%]">
-                    <p className="text-sm text-slate-300 leading-relaxed">
-                      Great question! Think of <code className="text-violet-400 bg-violet-500/15 px-1 rounded">async/await</code> as a way to write asynchronous code that reads like synchronous code.
-                      <br /><br />
-                      <strong className="text-white">Simple analogy:</strong> Imagine ordering coffee ☕. You don't stand frozen waiting — you sit down and get notified when it's ready. That's exactly what <code className="text-violet-400 bg-violet-500/15 px-1 rounded">await</code> does!
-                    </p>
-                  </div>
-                </div>
-                <div className="flex gap-2 mt-2">
-                  {['Give me an example', 'Practice question', 'Explain simpler'].map((q) => (
-                    <button key={q} className="text-xs px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-slate-400 hover:text-violet-400 hover:border-violet-500/30 transition-all">
-                      {q}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section id="faq" className="py-24">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6">
-          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
-            <Badge variant="amber" className="mb-4">FAQ</Badge>
-            <h2 className="text-4xl font-black text-white">Frequently Asked <span className="text-gradient">Questions</span></h2>
-          </motion.div>
-          <div className="space-y-3">
-            {FAQS.map((faq, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
-                className="border border-white/[0.07] rounded-2xl overflow-hidden">
-                <button onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="w-full flex items-center justify-between px-6 py-5 text-left hover:bg-white/[0.02] transition-colors">
-                  <span className="font-semibold text-sm text-white">{faq.q}</span>
-                  <motion.div animate={{ rotate: openFaq === i ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                    <ChevronDown className="w-4 h-4 text-slate-400 shrink-0 ml-4" />
-                  </motion.div>
-                </button>
-                <AnimatePresence>
-                  {openFaq === i && (
-                    <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }}
-                      className="overflow-hidden">
-                      <p className="px-6 pb-5 text-sm text-slate-400 leading-relaxed">{faq.a}</p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FINAL CTA */}
-      <section className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-violet-900/20 via-[#0A0A0F] to-blue-900/20" />
-        <div className="relative max-w-3xl mx-auto px-4 sm:px-6 text-center">
-          <motion.div initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-            className="gradient-border rounded-3xl p-12">
-            <div className="flex justify-center mb-6">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-600 to-blue-600 flex items-center justify-center animate-pulse-glow">
-                <Rocket className="w-8 h-8 text-white" />
               </div>
             </div>
-            <h2 className="text-4xl sm:text-5xl font-black text-white mb-4">
-              Ready to Start Your <span className="text-gradient">Learning Journey?</span>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION 6: FAQ ACCORDION
+          ========================================================================= */}
+      <section id="faq" className="py-24 md:py-32 relative border-t border-white/[0.06] bg-[#090910]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-semibold mb-4">
+              Got Questions?
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-4">
+              Frequently Asked <span className="gradient-text-accent">Questions</span>
             </h2>
-            <p className="text-lg text-slate-400 mb-8">Join 50,000+ learners building their future with AI-powered guidance.</p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-                onClick={() => navigate('/register')}
-                className="px-8 py-4 rounded-2xl bg-gradient-to-r from-violet-600 to-blue-600 text-white font-bold text-base flex items-center justify-center gap-2 shadow-xl shadow-violet-500/30">
-                Build My Learning Path <ArrowRight className="w-5 h-5" />
-              </motion.button>
-              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-                onClick={() => navigate('/login')}
-                className="px-8 py-4 rounded-2xl border border-white/10 text-slate-300 font-semibold hover:bg-white/[0.04] transition-colors flex items-center justify-center gap-2">
-                <PlayCircle className="w-5 h-5" /> Sign In
-              </motion.button>
-            </div>
-          </motion.div>
+          </div>
+
+          <div className="space-y-4">
+            {FAQS.map((faq, idx) => {
+              const isOpen = openFaq === idx;
+              return (
+                <div
+                  key={idx}
+                  className="rounded-2xl border border-white/[0.08] bg-[#0e0e18] overflow-hidden transition-all"
+                >
+                  <button
+                    onClick={() => setOpenFaq(isOpen ? null : idx)}
+                    className="w-full flex items-center justify-between p-6 text-left hover:bg-white/[0.02] transition-colors cursor-pointer"
+                  >
+                    <span className="text-sm sm:text-base font-bold text-white pr-4">
+                      {faq.q}
+                    </span>
+                    <ChevronDown
+                      className={`w-5 h-5 text-slate-400 shrink-0 transition-transform duration-300 ${
+                        isOpen ? 'rotate-180 text-violet-400' : ''
+                      }`}
+                    />
+                  </button>
+                  <AnimatePresence>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25 }}
+                        className="overflow-hidden"
+                      >
+                        <p className="px-6 pb-6 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-white/[0.04] pt-4">
+                          {faq.a}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="border-t border-white/[0.06] py-10">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-600 to-blue-600 flex items-center justify-center">
-              <span className="text-white font-black text-xs">S</span>
+      {/* =========================================================================
+          SECTION 7: GRAND CALL TO ACTION
+          ========================================================================= */}
+      <section className="py-24 md:py-36 relative overflow-hidden">
+        <div className="absolute inset-0 hero-glow-1 opacity-70 pointer-events-none" />
+
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="rounded-3xl p-1 bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 shadow-2xl">
+            <div className="bg-[#0b0b14] rounded-[22px] px-8 py-16 sm:p-20 text-center relative overflow-hidden">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center mx-auto mb-8 shadow-xl shadow-violet-500/30">
+                <Sparkles className="w-8 h-8 text-white" />
+              </div>
+
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight mb-6">
+                Ready to Master Anything, <br />
+                <span className="gradient-text-accent">One Step at a Time?</span>
+              </h2>
+
+              <p className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto leading-relaxed mb-10">
+                Join thousands of students and career switchers building personalized roadmaps with AI-guided learning.
+              </p>
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button
+                  onClick={() => navigate('/register')}
+                  className="w-full sm:w-auto btn-primary-glow px-8 py-4 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  Build My Learning Path
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => navigate('/login')}
+                  className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white/[0.05] border border-white/10 hover:bg-white/10 text-white font-semibold text-sm transition-all cursor-pointer"
+                >
+                  Sign In to Account
+                </button>
+              </div>
             </div>
-            <span className="text-white font-bold text-sm">SKILLORA AI</span>
           </div>
-          <p className="text-xs text-slate-500">© 2024 SKILLORA AI. Learn Anything, One Step at a Time.</p>
-          <div className="flex items-center gap-1 text-xs text-slate-500">
-            <Globe className="w-3.5 h-3.5" />
-            <span>Available worldwide</span>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          FOOTER
+          ========================================================================= */}
+      <footer className="border-t border-white/[0.08] py-12 bg-[#050508]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center text-white text-xs font-bold">
+              S
+            </div>
+            <span className="text-sm font-extrabold text-white tracking-tight">SKILLORA AI</span>
+            <span className="text-xs text-slate-400">© 2026. All rights reserved.</span>
+          </div>
+
+          <div className="flex items-center gap-6 text-xs text-slate-400">
+            <a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a>
+            <a href="#features" className="hover:text-white transition-colors">Features</a>
+            <a href="#paths" className="hover:text-white transition-colors">Roadmaps</a>
+            <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
           </div>
         </div>
       </footer>
