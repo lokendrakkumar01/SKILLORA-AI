@@ -56,6 +56,9 @@ button { cursor: pointer; }
 .app-main :is(input, textarea, select) { max-width: 100%; }
 .app-main :is(h1, h2, h3) { text-wrap: pretty; }
 .app-mobile-nav { display: none; }
+.global-ai-trigger { right: 28px; bottom: 24px; }
+.global-ai-panel { right: 28px; bottom: 88px; width: min(420px, calc(100vw - 40px)); height: min(660px, calc(100dvh - 120px)); }
+.global-ai-messages { overscroll-behavior: contain; }
 .public-navbar__inner {
   width: min(100%, var(--content-width));
   padding-inline: clamp(20px, 4vw, 56px);
@@ -230,6 +233,8 @@ code, pre {
 }
 
 @media (max-width: 1023px) {
+  .global-ai-trigger { right: 16px; bottom: calc(82px + env(safe-area-inset-bottom)); }
+  .global-ai-panel { right: 12px; bottom: calc(140px + env(safe-area-inset-bottom)); width: calc(100vw - 24px); height: min(620px, calc(100dvh - 170px - env(safe-area-inset-bottom))); }
   .app-mobile-nav {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));

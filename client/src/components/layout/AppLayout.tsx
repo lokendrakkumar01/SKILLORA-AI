@@ -4,6 +4,7 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { AppMobileNav, AppSidebar, AppTopbar } from './Navbar';
 import { PageLoader } from '../ui/LoadingSpinner';
+import { GlobalAiAssistant } from '../ai/GlobalAiAssistant';
 
 export function ProtectedLayout({ children, title }: { children: React.ReactNode; title?: string }) {
   const { user, loading } = useAuth();
@@ -28,6 +29,7 @@ export function ProtectedLayout({ children, title }: { children: React.ReactNode
         </main>
         <AppMobileNav />
       </div>
+      <GlobalAiAssistant />
     </div>
   );
 }
