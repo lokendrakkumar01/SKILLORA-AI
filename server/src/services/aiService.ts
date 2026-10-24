@@ -227,21 +227,28 @@ ${context.exercises || 'None supplied.'}`;
   const models = [...new Set([preferredModel, DEFAULT_MODEL, 'gemini-3.6-flash'])];
   for (let index = 0; index < models.length; index++) {
     try {
-      const chat = client.chats.create({
+      // Use one stateless request with normalized turns. This avoids session-specific
+      // chat failures while keeping the same conversation context and system guidance.
+      const response = await client.models.generateContent({
         model: models[index],
+        contents: [
+          ...normalizeHistory(history),
+          { role: 'user' as const, parts: [{ text: message.trim() }] },
+        ],
         config: { systemInstruction, maxOutputTokens: 1_000 },
-        history: normalizeHistory(history),
       });
-      const response = await chat.sendMessage({ message: message.trim() });
       if (response.text?.trim()) return response.text.trim();
-      return null;
+      throw new Error('The AI model returned an empty reply.');
     } catch (error) {
       const providerError = error as { status?: number; code?: number | string; message?: string };
       const details = providerError.message || '';
+      const status = Number(providerError.status || providerError.code);
       const modelUnavailable = providerError.status === 404 || providerError.code === 404 ||
         /model.{0,40}(not found|not available|unsupported|does not exist)|unsupported.{0,30}model/i.test(details);
-      if (modelUnavailable && index < models.length - 1) {
-        console.warn(`Gemini model ${models[index]} unavailable; trying fallback model.`);
+      const retryable = modelUnavailable || [408, 500, 502, 503, 504].includes(status) ||
+        /ECONNRESET|ETIMEDOUT|EAI_AGAIN|fetch failed|network error/i.test(details);
+      if (retryable && index < models.length - 1) {
+        console.warn(`Gemini request with ${models[index]} failed; trying fallback model.`);
         continue;
       }
       console.error('Gemini tutor request failed:', providerError.status || providerError.code || 'unknown status', details.slice(0, 500));
